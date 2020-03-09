@@ -1,0 +1,127 @@
+@charset "UTF-8";
+
+.au-main,
+.au-layout {
+  width: 100%;
+  height: 100%;
+}
+
+.au-layout {
+  background-color: rgb(243, 245, 247);
+  display: flex;
+
+  .au-layout-side {
+    width: 256px;
+    display: flex;
+    flex-direction: column;
+    transition: all .2s ease-in-out;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
+    z-index: 1;
+
+    &-collapsed {
+      width: 80px;
+    }
+
+    .au-layout-logo {
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: rgb(255, 255, 255);
+
+      img {
+        height: 32px;
+      }
+
+      h1 {
+        flex: 1;
+        height: 32px;
+        overflow: hidden;
+        margin-left: 12px;
+        margin-bottom: 0;
+        font-weight: 600;
+        font-size: 20px;
+        color: #ff6a00;
+      }
+    }
+
+    .au-layout-menu {
+      flex: 1;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      border-top: rgba(29,35,41,.05) solid 1px;
+
+      &>ul {
+        border: none;
+      }
+
+      &::-webkit-scrollbar {
+        display:none
+      }
+    }
+  }
+
+  .au-layout-inside {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .au-layout-header {
+      height: 64px;
+      display: flex;
+      background-color: rgb(255, 255, 255);
+      box-shadow: 0 2px 2px 0 rgba(29, 35, 41, .05);
+
+      .au-layout-header-trigger {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        padding: 0 15px;
+        transition: all .2s ease-in-out;
+
+        &:hover {
+          background-color: rgb(248, 248, 249);
+        }
+      }
+
+      .au-layout-header-placeholder {
+        flex: 1;
+      }
+
+      .au-layout-header-user {
+        span:last-child {
+          padding-left: 12px;
+          color: rgba(0, 0, 0, .65);
+        }
+      }
+    }
+
+    .au-layout-tabs {
+      margin: 5px 10px 0 10px;
+      height: 40px;
+      overflow: hidden;
+    }
+
+    .au-layout-content {
+      flex: 1;
+      margin: 5px 10px 0 10px;
+      background-color: #1890ff;
+    }
+
+    .au-layout-footer {
+      background-color: #fff;
+      margin: 5px 10px 0 10px;
+      padding: 10px 0;
+
+      .au-layout-footer-copyright {
+        height: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
