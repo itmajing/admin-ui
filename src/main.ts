@@ -4,9 +4,11 @@ import router from './router';
 import store from './store';
 import Logger from '@/libs/logger';
 import Utils from '@/libs/utils';
+import Particles from 'vue-particles';
 import AntDesign from 'ant-design-vue';
 import './style/index.less';
 
+Vue.use(Particles);
 Vue.use(Logger);
 Vue.use(Utils);
 Vue.use(AntDesign);

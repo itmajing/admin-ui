@@ -30,23 +30,24 @@
           <div class="au-layout-header-trigger">
             <a-icon type="bell" :style="{ fontSize: '18px' }" />
           </div>
-          <div class="au-layout-header-trigger">
-            <a-icon type="setting" :style="{ fontSize: '18px' }" />
-          </div>
           <a-dropdown class="au-layout-header-trigger au-layout-header-user">
             <div>
               <a-avatar size="small">A</a-avatar>
               <span>Admin</span>
             </div>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a href="javascript:;">1st menu item</a>
+            <a-menu slot="overlay" @click="handleDropdownClick">
+              <a-menu-item key="user">
+                <a-icon type="user" />
+                <span>个人信息</span>
               </a-menu-item>
-              <a-menu-item>
-                <a href="javascript:;">2nd menu item</a>
+              <a-menu-item key="setting">
+                <a-icon type="setting" />
+                <span>个人设置</span>
               </a-menu-item>
-              <a-menu-item>
-                <a href="javascript:;">3rd menu item</a>
+              <a-menu-divider />
+              <a-menu-item key="exit">
+                <a-icon type="export" />
+                <span>退出登录</span>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -101,6 +102,7 @@ export default class Main extends Vue {
   @Mutation addOpenedTab!: Function;
   @Mutation setActiveTab!: Function;
   @Mutation removeOpenedTab!: Function;
+  @Mutation removeAccessToken!: Function;
   @Getter menuList!: Menu[];
 
   @Watch('activeTab')
@@ -165,6 +167,23 @@ export default class Main extends Vue {
     }
   }
 
+  /**
+   * 下拉菜单
+   */
+  handleDropdownClick({ key = '' }) {
+    if (key === 'user') {
+      console.log('个人信息');
+    } else if (key === 'setting') {
+      console.log('个人设置');
+    } else if (key === 'exit') {
+      console.log('退出登录');
+      this.removeAccessToken();
+      this.$router.replace({
+        name: 'login'
+      });
+    }
+  }
+
   mounted() {
     this.$logger.info(window.navigator.userAgent);
     this.initOpenedTab(this.$route);
@@ -176,9 +195,9 @@ export default class Main extends Vue {
 @import 'main.less';
 </style>
 <style lang="less">
-.ivu-menu-vertical {
-  &:after {
-    display: none !important;
+.au-layout {
+  .ant-menu-inline {
+    border: none;
   }
 }
 </style>

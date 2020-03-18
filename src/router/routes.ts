@@ -1,7 +1,8 @@
 import { RouteConfig } from 'vue-router';
 
-// 登录页
-import Login from '@/views/login/login.vue';
+// 登录/注册
+import Login from '@/views/user/login/login.vue';
+import Register from '@/views/user/register/register.vue';
 
 // 主框架
 import Main from '@/views/main/main.vue';
@@ -154,6 +155,14 @@ const routes: RouteConfig[] = [
       hide: true
     },
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      hide: true
+    },
+    component: Register
   },
   {
     path: '*',

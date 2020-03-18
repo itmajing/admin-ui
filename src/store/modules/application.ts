@@ -4,6 +4,7 @@ import routes from '@/router/routes';
 import { RouteConfig } from 'vue-router';
 
 interface State {
+  accessToken: string;
   openedTabs: HashRouterTab[];
   activeTab: HashRouterTab;
 }
@@ -12,6 +13,7 @@ const OPENED_TABS = 'open-tabs';
 
 const application = {
   state: {
+    accessToken: '',
     openedTabs: [],
     activeTab: {}
   },
@@ -83,6 +85,12 @@ const application = {
         activeTab: state.activeTab,
         openedTabs: state.openedTabs
       });
+    },
+    setAccessToken(state: State, accessToken: string) {
+      state.accessToken = accessToken;
+    },
+    removeAccessToken(state: State) {
+      state.accessToken = '';
     }
   },
   actions: {},
