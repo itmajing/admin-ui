@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+@import "../../style/color";
 .au-main,
 .au-layout {
   width: 100%;
@@ -65,8 +66,6 @@
 
   .au-layout-inside {
     flex: 1;
-    display: flex;
-    flex-direction: column;
 
     .au-layout-header {
       height: 64px;
@@ -100,15 +99,45 @@
     }
 
     .au-layout-tabs {
-      margin: 5px 10px 0 10px;
+      margin: 5px 5px 0 10px;
       height: 40px;
       overflow: hidden;
+      display: flex;
+
+      .ant-tabs {
+        width: calc(~'100% - 50px');
+      }
+
+      .au-layout-tabs-menu {
+        width: 50px;
+        background-color: #fff;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border: 1px solid #e8e8e8;
+
+        .au-layout-tabs-menu-trigger {
+          cursor: pointer;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: rgba(0, 0, 0, 0.45);
+
+          &:hover {
+            color: @primary-color;
+          }
+        }
+      }
     }
 
     .au-layout-content {
-      flex: 1;
-      margin: 5px 10px 0 10px;
-      background-color: #1890ff;
+      height: calc(~'100% - 115px');
+      margin: 5px 0 0 10px;
+      background-color: #fff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border-radius: 2px;
     }
 
     .au-layout-footer {

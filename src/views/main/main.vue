@@ -58,8 +58,8 @@
             size="small"
             :hideAdd="true"
             :activeKey="activeTab.hash"
-            @tabClick="handleTabClick"
             @edit="handleTabEdit"
+            @tabClick="handleTabClick"
           >
             <a-tab-pane
               v-for="tab in openedTabs"
@@ -68,12 +68,30 @@
               :closable="tab.closable"
             ></a-tab-pane>
           </a-tabs>
+          <div class="au-layout-tabs-menu">
+            <a-dropdown>
+              <div class="au-layout-tabs-menu-trigger">
+                <a-icon type="down" :style="{ fontSize: '16px' }" />
+              </div>
+              <a-menu slot="overlay" @click="handleTabMenuClick">
+                <a-menu-item key="close-other">
+                  <a-icon type="close" />
+                  <span>关闭其他</span>
+                </a-menu-item>
+                <a-menu-item key="close-all">
+                  <a-icon type="close-circle" />
+                  <span>关闭所有</span>
+                </a-menu-item>
+                <a-menu-item key="reload-page">
+                  <a-icon type="reload" />
+                  <span>刷新页面</span>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+          </div>
         </div>
         <div class="au-layout-content">
-          <router-view></router-view>
-        </div>
-        <div class="au-layout-footer">
-          <div class="au-layout-footer-copyright">Copyright © 2020 Admin UI</div>
+          <router-view v-if="routerView"></router-view>
         </div>
       </div>
     </div>
@@ -96,12 +114,16 @@ export default class Main extends Vue {
 
   collapsed = false;
 
+  routerView = true;
+
   @State(state => state.application.openedTabs) openedTabs!: HashRouterTab[];
   @State(state => state.application.activeTab) activeTab!: HashRouterTab;
   @Mutation initOpenedTab!: Function;
   @Mutation addOpenedTab!: Function;
   @Mutation setActiveTab!: Function;
   @Mutation removeOpenedTab!: Function;
+  @Mutation removeAllOpenedTab!: Function;
+  @Mutation removeOtherOpenedTab!: Function;
   @Mutation removeAccessToken!: Function;
   @Getter menuList!: Menu[];
 
@@ -167,6 +189,23 @@ export default class Main extends Vue {
     }
   }
 
+  handleRefreshView() {
+    this.routerView = false;
+    this.$nextTick(() => {
+      this.routerView = true;
+    });
+  }
+
+  handleTabMenuClick({ key = '' }) {
+    if (key === 'close-all') {
+      this.removeAllOpenedTab();
+    } else if (key === 'close-other') {
+      this.removeOtherOpenedTab();
+    } else if (key === 'reload-page') {
+      this.handleRefreshView();
+    }
+  }
+
   /**
    * 下拉菜单
    */
@@ -195,6 +234,7 @@ export default class Main extends Vue {
 @import 'main.less';
 </style>
 <style lang="less">
+/*重写组件样式*/
 .au-layout {
   .ant-menu-inline {
     border: none;

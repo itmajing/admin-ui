@@ -86,6 +86,21 @@ const application = {
         openedTabs: state.openedTabs
       });
     },
+    removeAllOpenedTab(state: State) {
+      const routerTab = utils.generateDefaultRouterTab();
+      state.openedTabs = [];
+      (this as any).commit('addOpenedTab', routerTab);
+    },
+    removeOtherOpenedTab(state: State) {
+      state.openedTabs = state.openedTabs.filter(tab => {
+        return !tab.closable || tab.hash === state.activeTab.hash;
+      });
+
+      utils.setSessionStorageItem(OPENED_TABS, {
+        activeTab: state.activeTab,
+        openedTabs: state.openedTabs
+      });
+    },
     setAccessToken(state: State, accessToken: string) {
       state.accessToken = accessToken;
     },

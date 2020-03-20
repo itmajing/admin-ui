@@ -47,9 +47,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Menu } from '@/libs/utils/types/utils';
 
-@Component({
-  name: 'side-menu'
-})
+@Component
 export default class SideMenu extends Vue {
   @Prop(String) selectedKey!: string;
   @Prop(Boolean) readonly collapsed!: boolean;
