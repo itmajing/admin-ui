@@ -215,7 +215,6 @@ export default class Main extends Vue {
     } else if (key === 'setting') {
       console.log('个人设置');
     } else if (key === 'exit') {
-      console.log('退出登录');
       this.removeAccessToken();
       this.$router.replace({
         name: 'login'

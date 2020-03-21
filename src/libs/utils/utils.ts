@@ -27,6 +27,37 @@ class AuUtils implements UtilsObject {
     }
   }
 
+  removeSessionStorageItem(key: string) {
+    sessionStorage.removeItem(key);
+  }
+
+  /**
+   * 保存LocalStorageItem
+   * @param key 键
+   * @param data 值
+   */
+  setLocalStorageItem(key: string, data: any) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  /**
+   * 获取LocalStorageItem
+   * @param key 键
+   * @returns {*} 值
+   */
+  getLocalStorageItem(key: string) {
+    const json = localStorage.getItem(key);
+    if (json) {
+      return JSON.parse(json);
+    } else {
+      return undefined;
+    }
+  }
+
+  removeLocalStorageItem(key: string) {
+    localStorage.removeItem(key);
+  }
+
   /**
    * 生成菜单列表
    */

@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
 import store from '@/store/index';
+import { AUTH_HEADER } from '@/libs/global/constant';
+import utils from '@/libs/utils/utils';
 
 Vue.use(VueRouter);
 
@@ -29,5 +31,11 @@ router.beforeEach((to, from, next) => {
     }
   }
 });
+
+// 刷新页面设置token
+const accessToken = utils.getSessionStorageItem(AUTH_HEADER);
+if (accessToken) {
+  store.commit('setAccessToken', accessToken);
+}
 
 export default router;

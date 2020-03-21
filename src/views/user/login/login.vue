@@ -36,7 +36,7 @@
                     </a-checkbox>
                     <a class="au-login-password-forgot" @click="handleForgotPassword">忘记密码</a>
                   </a-form-model-item>
-                  <a-button type="primary" html-type="submit" :block="true">
+                  <a-button type="primary" html-type="submit" :loading="loginLoading" :block="true">
                     登录
                   </a-button>
                 </a-form-model>
@@ -58,9 +58,16 @@
                     <a-input v-model="mobileForm.captcha" placeholder="验证码" style="width: calc(100% - 110px)">
                       <a-icon slot="prefix" type="mail" style="color: rgba(0,0,0,.25)" />
                     </a-input>
-                    <a-button style="width: 102px; margin-left: 8px">获取验证码</a-button>
+                    <a-button
+                      style="width: 102px; margin-left: 8px"
+                      @click="handleSendCaptcha"
+                      :disabled="captchaSending"
+                    >
+                      <span v-if="captchaSending">{{ captchaCountdown }}s</span>
+                      <span v-else>获取验证码</span>
+                    </a-button>
                   </a-form-model-item>
-                  <a-button type="primary" html-type="submit" :block="true">
+                  <a-button type="primary" html-type="submit" :loading="loginLoading" :block="true">
                     登录
                   </a-button>
                 </a-form-model>
@@ -110,6 +117,10 @@ export default class Login extends Vue {
     mobile: [{ required: true, message: '请输入手机号!' }],
     captcha: [{ required: true, message: '请输入验证码!' }]
   };
+  loginLoading = false;
+  captchaSending = false;
+  captchaInterval = -1;
+  captchaCountdown = 60;
 
   @Mutation setAccessToken!: Function;
 
@@ -122,16 +133,60 @@ export default class Login extends Vue {
     }
   }
 
+  handleSendCaptcha() {
+    this.$refs.mobileForm.validateField('mobile', (error: string) => {
+      if (!error) {
+        this.$axios
+          .post('api/captcha/mobile', { mobile: this.mobileForm.mobile, service: 'user-login' })
+          .then(({ data = {} }) => {
+            if (data.success) {
+              this.captchaSending = true;
+              this.captchaCountdown = 60;
+              this.captchaInterval = setInterval(() => {
+                if (this.captchaCountdown > 1) {
+                  this.captchaCountdown--;
+                } else {
+                  this.captchaSending = false;
+                  clearInterval(this.captchaInterval);
+                }
+              }, 1000);
+            } else {
+              this.$message.error('发送失败');
+            }
+          })
+          .catch(() => {
+            this.$message.error('发送失败');
+          });
+      }
+    });
+  }
+
   /**
    * 使用账号密码登录
    */
   handlePasswordLogin(e: any) {
     e.preventDefault();
     this.$refs.passwordForm.validate((validate: boolean) => {
-      console.log(validate, JSON.stringify(this.passwordForm));
       if (validate) {
-        this.$message.success('密码登录成功');
-        this.handleLoginSuccess('token');
+        this.loginLoading = true;
+        this.$axios
+          .post('api/auth/password', this.mobileForm)
+          .then(({ data = {} }) => {
+            if (data.success) {
+              this.$message.success('登录成功');
+              setTimeout(() => {
+                this.handleLoginSuccess(data.data.accessToken);
+              }, 500);
+            } else {
+              this.handleLoginFailed();
+            }
+          })
+          .catch(() => {
+            this.handleLoginFailed();
+          })
+          .finally(() => {
+            this.loginLoading = false;
+          });
       }
     });
   }
@@ -142,10 +197,25 @@ export default class Login extends Vue {
   handleMobileLogin(e: any) {
     e.preventDefault();
     this.$refs.mobileForm.validate((validate: boolean) => {
-      console.log(validate, JSON.stringify(this.mobileForm));
       if (validate) {
-        this.$message.success('验证码登录成功');
-        this.handleLoginSuccess('token');
+        this.$axios
+          .post('api/auth/mobile', this.passwordForm)
+          .then(({ data = {} }) => {
+            if (data.success) {
+              this.$message.success('登录成功');
+              setTimeout(() => {
+                this.handleLoginSuccess(data.data.accessToken);
+              }, 500);
+            } else {
+              this.handleLoginFailed();
+            }
+          })
+          .catch(() => {
+            this.handleLoginFailed();
+          })
+          .finally(() => {
+            this.loginLoading = false;
+          });
       }
     });
   }
@@ -158,7 +228,7 @@ export default class Login extends Vue {
   }
 
   handleLoginFailed() {
-    console.log('登录失败');
+    this.$message.error('登录失败');
   }
 
   handleForgotPassword(e: any) {

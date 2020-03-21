@@ -2,6 +2,7 @@ import utils from '@/libs/utils/utils';
 import { HashRouterTab, RouterTab } from '@/libs/utils/types/utils';
 import routes from '@/router/routes';
 import { RouteConfig } from 'vue-router';
+import { AUTH_HEADER } from '@/libs/global/constant';
 
 interface State {
   accessToken: string;
@@ -103,9 +104,11 @@ const application = {
     },
     setAccessToken(state: State, accessToken: string) {
       state.accessToken = accessToken;
+      utils.setSessionStorageItem(AUTH_HEADER, accessToken);
     },
     removeAccessToken(state: State) {
       state.accessToken = '';
+      utils.removeSessionStorageItem(AUTH_HEADER);
     }
   },
   actions: {},

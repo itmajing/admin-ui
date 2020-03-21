@@ -8,7 +8,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  mounted(): void {
+    console.log(this.$global);
+  }
+}
 </script>
 
 <style lang="less" scoped></style>

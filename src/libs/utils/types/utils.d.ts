@@ -26,6 +26,14 @@ interface UtilsObject {
 
   getSessionStorageItem(key: string): any;
 
+  removeSessionStorageItem(key: string): void;
+
+  setLocalStorageItem(key: string, data: any): void;
+
+  getLocalStorageItem(key: string): any;
+
+  removeLocalStorageItem(key: string): void;
+
   generateMenuList(routes: RouteConfig[]): Menu[];
 
   generateRouterTab(name: string): RouterTab | null;
