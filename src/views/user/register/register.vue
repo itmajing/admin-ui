@@ -7,14 +7,14 @@
           <span>Admin UI</span>
         </div>
         <a-card class="au-register-content-body" :hoverable="true" :bordered="false">
-          <a-form-model ref="mobileForm" :model="registerForm" :rules="registerRules" @submit="handleUserRegister">
+          <a-form-model ref="registerForm" :model="registerForm" :rules="registerRules" @submit="handleUserRegister">
             <a-form-model-item prop="username">
               <a-input v-model="registerForm.username" placeholder="用户名">
                 <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
               </a-input>
             </a-form-model-item>
             <a-form-model-item prop="password">
-              <a-input v-model="registerForm.username" placeholder="密码">
+              <a-input v-model="registerForm.password" placeholder="密码">
                 <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
               </a-input>
             </a-form-model-item>
@@ -32,9 +32,12 @@
               <a-input v-model="registerForm.captcha" placeholder="验证码" style="width: calc(100% - 110px)">
                 <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
               </a-input>
-              <a-button style="width: 102px; margin-left: 8px">获取验证码</a-button>
+              <a-button style="width: 102px; margin-left: 8px" @click="handleSendCaptcha" :disabled="captchaSending">
+                <span v-if="captchaSending">{{ captchaCountdown }}s</span>
+                <span v-else>获取验证码</span>
+              </a-button>
             </a-form-model-item>
-            <a-button type="primary" html-type="submit" :block="true">
+            <a-button type="primary" html-type="submit" :loading="registerLoading" :block="true">
               注册
             </a-button>
           </a-form-model>
@@ -56,7 +59,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Register extends Vue {
-  $refs!: { passwordForm: HTMLFormElement; mobileForm: HTMLFormElement };
+  $refs!: { registerForm: HTMLFormElement };
   registerForm = {
     username: '',
     password: '',
@@ -71,15 +74,74 @@ export default class Register extends Vue {
     mobile: [{ required: true, message: '请输入手机号码!' }],
     captcha: [{ required: true, message: '请输入验证码!' }]
   };
+  registerLoading = false;
+  captchaSending = false;
+  captchaInterval = -1;
+  captchaCountdown = 60;
+
+  handleSendCaptcha() {
+    this.$refs.registerForm.validateField('mobile', (error: string) => {
+      if (!error) {
+        this.$axios
+          .post('api/captcha/mobile', { mobile: this.registerForm.mobile, service: 'user-register' })
+          .then(({ data = {} }) => {
+            if (data.success) {
+              this.captchaSending = true;
+              this.captchaCountdown = 60;
+              this.captchaInterval = setInterval(() => {
+                if (this.captchaCountdown > 1) {
+                  this.captchaCountdown--;
+                } else {
+                  this.captchaSending = false;
+                  clearInterval(this.captchaInterval);
+                }
+              }, 1000);
+            } else {
+              this.$message.error('发送失败');
+            }
+          })
+          .catch(() => {
+            this.$message.error('发送失败');
+          });
+      }
+    });
+  }
 
   handleUserRegister(e: any) {
     e.preventDefault();
-    this.$refs.mobileForm.validate((validate: boolean) => {
-      console.log(validate, JSON.stringify(this.registerForm));
+    this.$refs.registerForm.validate((validate: boolean) => {
       if (validate) {
-        this.$message.success('验证码登录成功');
+        this.registerLoading = true;
+        this.$axios
+          .post('api/user/register', this.registerForm)
+          .then(({ data = {} }) => {
+            if (data.success) {
+              this.$message.success('注册成功');
+              setTimeout(() => {
+                this.handleRegisterSuccess();
+              }, 500);
+            } else {
+              this.handleRegisterFailed();
+            }
+          })
+          .catch(() => {
+            this.handleRegisterFailed();
+          })
+          .finally(() => {
+            this.registerLoading = false;
+          });
       }
     });
+  }
+
+  handleRegisterSuccess() {
+    this.$router.replace({
+      name: 'main'
+    });
+  }
+
+  handleRegisterFailed() {
+    this.$message.error('注册失败');
   }
 
   handleLoginAccount(e: any) {
