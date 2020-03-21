@@ -222,9 +222,13 @@ export default class Main extends Vue {
     }
   }
 
-  mounted() {
+  mounted(): void {
     this.$logger.info(window.navigator.userAgent);
     this.initOpenedTab(this.$route);
+  }
+
+  beforeDestroy(): void {
+    document.title = this.cachedTitle;
   }
 }
 </script>
