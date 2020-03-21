@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>个人设置</div>
+    <div>个人中心</div>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class Settings extends Vue {}
+export default class AccountCenter extends Vue {}
 </script>
 
 <style lang="less" scoped></style>

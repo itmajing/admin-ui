@@ -10,6 +10,10 @@ import Main from '@/views/main/main.vue';
 // 首页
 import Home from '@/views/home/home.vue';
 
+// 账号
+import AccountCenter from '@/views/account/account-center.vue';
+import AccountSetting from '@/views/account/account-setting.vue';
+
 // 控制台
 import Analysis from '@/views/dashboard/analysis.vue';
 import Monitor from '@/views/dashboard/monitor.vue';
@@ -48,6 +52,32 @@ const routes: RouteConfig[] = [
           closable: false
         },
         component: Home
+      }
+    ]
+  },
+  {
+    path: '/account',
+    name: 'account',
+    meta: {
+      hide: true
+    },
+    component: Main,
+    children: [
+      {
+        name: 'account-center',
+        path: 'center',
+        meta: {
+          title: '个人中心'
+        },
+        component: AccountCenter
+      },
+      {
+        name: 'account-setting',
+        path: 'setting',
+        meta: {
+          title: '个人设置'
+        },
+        component: AccountSetting
       }
     ]
   },
