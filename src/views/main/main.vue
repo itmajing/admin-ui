@@ -38,7 +38,7 @@
             <a-menu slot="overlay" @click="handleDropdownClick">
               <a-menu-item key="user">
                 <a-icon type="user" />
-                <span>个人信息</span>
+                <span>个人中心</span>
               </a-menu-item>
               <a-menu-item key="setting">
                 <a-icon type="setting" />
@@ -99,7 +99,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Provide, Vue, Watch } from 'vue-property-decorator';
 import SideMenu from '@/components/menu/side-menu.vue';
 import { Getter, Mutation, State } from 'vuex-class';
 import { HashRouterTab, Menu } from '@/libs/utils/types/utils';
@@ -111,9 +111,7 @@ import { HashRouterTab, Menu } from '@/libs/utils/types/utils';
 })
 export default class Main extends Vue {
   cachedTitle = '';
-
   collapsed = false;
-
   routerView = true;
 
   @State(state => state.application.openedTabs) openedTabs!: HashRouterTab[];
@@ -126,6 +124,9 @@ export default class Main extends Vue {
   @Mutation removeOtherOpenedTab!: Function;
   @Mutation removeAccessToken!: Function;
   @Getter menuList!: Menu[];
+
+  @Provide('handleOpenTab') handleOpenTabFunction = this.handleOpenTab;
+  @Provide('handleCloseTab') handleCloseTabFunction = this.handleCloseTab;
 
   @Watch('activeTab')
   onActiveTabChange(routerTab: HashRouterTab) {
@@ -143,7 +144,7 @@ export default class Main extends Vue {
 
     // 跳转路由
     if (routerTab.name) {
-      this.$logger.info(`target route: ${routerTab.name}, current route: ${this.$route.name}`);
+      this.$logger.info(`current route: ${this.$route.name}, target route: ${routerTab.name}`);
 
       if (this.$route.name !== routerTab.name) {
         this.$router.replace({
@@ -160,8 +161,7 @@ export default class Main extends Vue {
    */
   handleMenuSelect(param: any) {
     this.$logger.info(`select menu, key: ${param.key}, path: ${param.keyPath}`);
-    const routerTab = this.$utils.generateRouterTab(param.key);
-    this.addOpenedTab(routerTab);
+    this.handleOpenTab(param.key);
   }
 
   /**
@@ -211,15 +211,43 @@ export default class Main extends Vue {
    */
   handleDropdownClick({ key = '' }) {
     if (key === 'user') {
-      console.log('个人信息');
+      const name = 'account-center';
+      this.handleOpenTab(name);
     } else if (key === 'setting') {
-      console.log('个人设置');
+      const name = 'account-setting';
+      this.handleOpenTab(name);
     } else if (key === 'exit') {
       this.removeAccessToken();
       this.$router.replace({
         name: 'login'
       });
     }
+  }
+
+  /**
+   * 打开标签页
+   * @param name 路由名称
+   * @param query 路由参数
+   * @param params 路由参数
+   */
+  handleOpenTab(name: string, query?: any, params?: any) {
+    const routerTab = this.$utils.generateRouterTab(name);
+    if (routerTab) {
+      if (query) {
+        routerTab.query = query;
+      }
+      if (params) {
+        routerTab.query = params;
+      }
+      this.addOpenedTab(routerTab);
+    }
+  }
+
+  /**
+   * 关闭当前标签页
+   */
+  handleCloseTab() {
+    this.removeOpenedTab(this.activeTab.hash);
   }
 
   mounted(): void {
