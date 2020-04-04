@@ -59,7 +59,7 @@
             :hideAdd="true"
             :activeKey="activeTab.hash"
             @edit="handleTabEdit"
-            @tabClick="handleTabClick"
+            @change="handleTabChange"
           >
             <a-tab-pane
               v-for="tab in openedTabs"
@@ -174,7 +174,7 @@ export default class Main extends Vue {
   /**
    * 点击标签
    */
-  handleTabClick(hash: string) {
+  handleTabChange(hash: string) {
     this.$logger.info(`click tab, hash: ${hash}`);
     this.setActiveTab(hash);
   }
