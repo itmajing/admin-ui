@@ -1523,10 +1523,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
 
-ant-design-vue@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.npm.taobao.org/ant-design-vue/download/ant-design-vue-1.5.1.tgz?cache=0&sync_timestamp=1585841715597&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fant-design-vue%2Fdownload%2Fant-design-vue-1.5.1.tgz#e8bdcf69aa29492a875f028745561b7908d9f17e"
-  integrity sha1-6L3PaaopSSqHXwKHRVYbeQjZ8X4=
+ant-design-vue@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.npm.taobao.org/ant-design-vue/download/ant-design-vue-1.6.2.tgz#983634caac9cdaca0b3a095b540105b4f76da29f"
+  integrity sha1-mDY0yqyc2soLOglbVAEFtPdtop8=
   dependencies:
     "@ant-design/icons" "^2.1.1"
     "@ant-design/icons-vue" "^2.0.0"
@@ -1555,7 +1555,7 @@ ant-design-vue@^1.5.1:
     resize-observer-polyfill "^1.5.1"
     shallow-equal "^1.0.0"
     shallowequal "^1.0.2"
-    vue-ref "^1.0.4"
+    vue-ref "^2.0.0"
     warning "^4.0.0"
 
 any-promise@^1.0.0:
@@ -8462,10 +8462,10 @@ vue-property-decorator@^8.3.0:
   dependencies:
     vue-class-component "^7.1.0"
 
-vue-ref@^1.0.4:
-  version "1.0.6"
-  resolved "https://registry.npm.taobao.org/vue-ref/download/vue-ref-1.0.6.tgz#b9b3d7d0e290ee2fd3d50d5d7bdac520806cb265"
-  integrity sha1-ubPX0OKQ7i/T1Q1de9rFIIBssmU=
+vue-ref@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/vue-ref/download/vue-ref-2.0.0.tgz#483084d732abed11da796778a8266a3af0ea1a9c"
+  integrity sha1-SDCE1zKr7RHaeWd4qCZqOvDqGpw=
 
 vue-router@^3.1.5:
   version "3.1.6"
