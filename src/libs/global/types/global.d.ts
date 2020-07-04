@@ -1,13 +1,13 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
 interface GlobalObject {
   url: {
-    api: string;
-  };
+    api: string
+  }
 }
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $global: GlobalObject;
+    $global: GlobalObject
   }
 }

@@ -1,54 +1,54 @@
-import { RouteConfig } from 'vue-router';
-import { Dictionary } from 'vue-router/types/router';
+import { RouteConfig } from 'vue-router'
+import { Dictionary } from 'vue-router/types/router'
 
 interface Menu {
-  parent?: Menu;
-  name: string;
-  icon: string;
-  title: string;
-  children: Menu[];
+  parent?: Menu
+  name: string
+  icon: string
+  title: string
+  children: Menu[]
 }
 
 interface RouterTab {
-  name: string;
-  title: string;
-  closable: boolean;
-  query: Dictionary<string | (string | null)[] | null | undefined>;
-  params: Dictionary<string>;
+  name: string
+  title: string
+  closable: boolean
+  query: Dictionary<string | (string | null)[] | null | undefined>
+  params: Dictionary<string>
 }
 
 interface HashRouterTab extends RouterTab {
-  hash?: string;
+  hash?: string
 }
 
 interface UtilsObject {
-  setSessionStorageItem(key: string, data: any): void;
+  setSessionStorageItem(key: string, data: any): void
 
-  getSessionStorageItem(key: string): any;
+  getSessionStorageItem(key: string): any
 
-  removeSessionStorageItem(key: string): void;
+  removeSessionStorageItem(key: string): void
 
-  setLocalStorageItem(key: string, data: any): void;
+  setLocalStorageItem(key: string, data: any): void
 
-  getLocalStorageItem(key: string): any;
+  getLocalStorageItem(key: string): any
 
-  removeLocalStorageItem(key: string): void;
+  removeLocalStorageItem(key: string): void
 
-  generateMenuList(routes: RouteConfig[]): Menu[];
+  generateMenuList(routes: RouteConfig[]): Menu[]
 
-  generateRouterTab(name: string): RouterTab | null;
+  generateRouterTab(name: string): RouterTab | null
 
-  generateDefaultRouterTab(): RouterTab;
+  generateDefaultRouterTab(): RouterTab
 
-  generateHashRouterTab(tab: RouterTab): HashRouterTab;
+  generateHashRouterTab(tab: RouterTab): HashRouterTab
 
-  findMenuByName(menuList: Menu[], name: string): Menu;
+  findMenuByName(menuList: Menu[], name: string): Menu
 
-  findTopMenuByName(menuList: Menu[], name: string): Menu;
+  findTopMenuByName(menuList: Menu[], name: string): Menu
 }
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $utils: UtilsObject;
+    $utils: UtilsObject
   }
 }

@@ -5,12 +5,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class Home extends Vue {
   mounted(): void {
-    console.log(this.$global);
+    console.log(this.$global)
+    this.$router.addRoutes([])
   }
 }
 </script>

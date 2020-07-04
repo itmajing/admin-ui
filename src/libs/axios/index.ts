@@ -1,10 +1,10 @@
-import _Vue, { PluginObject } from 'vue';
-import AuAxios from './axios';
+import _Vue, { PluginObject } from 'vue'
+import AuAxios from './axios'
 
 const plugin: PluginObject<any> = {
   install(Vue: typeof _Vue) {
-    Vue.prototype.$axios = AuAxios;
-  }
-};
+    Vue.prototype.$axios = AuAxios
+  },
+}
 
-export default plugin;
+export default plugin

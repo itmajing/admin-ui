@@ -1,17 +1,17 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
 interface LoggerOption {
-  level?: 'error' | 'warn' | 'info' | 'debug' | 'trace';
+  level?: 'error' | 'warn' | 'info' | 'debug' | 'trace'
 }
 
 interface LoggerObject {
-  info(msg: any): void;
-  warn(msg: any): void;
-  error(msg: any): void;
+  info(msg: any): void
+  warn(msg: any): void
+  error(msg: any): void
 }
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $logger: LoggerObject;
+    $logger: LoggerObject
   }
 }

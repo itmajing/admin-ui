@@ -44,35 +44,35 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import { Menu } from '@/libs/utils/types/utils';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Menu } from '@/libs/utils/types/utils'
 
 @Component
 export default class SideMenu extends Vue {
-  @Prop(String) selectedKey!: string;
-  @Prop(Boolean) readonly collapsed!: boolean;
-  @Prop(Array) readonly menuList!: Menu[];
+  @Prop(String) selectedKey!: string
+  @Prop(Boolean) readonly collapsed!: boolean
+  @Prop(Array) readonly menuList!: Menu[]
 
-  openKeys: string[] = [];
-  selectedKeys: string[] = [];
+  openKeys: string[] = []
+  selectedKeys: string[] = []
 
   @Watch('selectedKey')
   onSelectedKeyChange(key: string) {
-    const menu = this.$utils.findTopMenuByName(this.menuList, key);
-    this.openKeys = menu ? [menu.name] : [];
-    this.selectedKeys = key ? [key] : [];
+    const menu = this.$utils.findTopMenuByName(this.menuList, key)
+    this.openKeys = menu ? [menu.name] : []
+    this.selectedKeys = key ? [key] : []
   }
 
   handleOpenedChange(openKeys: string[]) {
     if (openKeys.length > 0) {
       this.$nextTick(() => {
-        this.openKeys = [openKeys[openKeys.length - 1]];
-      });
+        this.openKeys = [openKeys[openKeys.length - 1]]
+      })
     }
   }
 
   handleMenuSelect(obj: any) {
-    this.$emit('select', obj);
+    this.$emit('select', obj)
   }
 }
 </script>

@@ -1,14 +1,14 @@
-import { GlobalObject } from '@/libs/global/types/global';
+import { GlobalObject } from '@/libs/global/types/global'
 
 class AuGlobal implements GlobalObject {
-  url: { api: string };
+  url: { api: string }
 
   constructor() {
-    const w = window as any;
+    const w = window as any
     this.url = {
-      api: (w.g && w.g.api) || 'http://127.0.0.1:8090'
-    };
+      api: (w.g && w.g.api) || 'http://127.0.0.1:8090',
+    }
   }
 }
 
-export default new AuGlobal();
+export default new AuGlobal()

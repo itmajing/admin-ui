@@ -1,3 +1,3 @@
-const AUTH_HEADER = 'AccessToken';
+const AUTH_HEADER = 'AccessToken'
 
-export { AUTH_HEADER };
+export { AUTH_HEADER }

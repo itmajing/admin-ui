@@ -55,29 +55,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class Register extends Vue {
-  $refs!: { registerForm: HTMLFormElement };
+  $refs!: { registerForm: HTMLFormElement }
   registerForm = {
     username: '',
     password: '',
     confirm: '',
     mobile: '',
-    captcha: ''
-  };
+    captcha: '',
+  }
   registerRules = {
     username: [{ required: true, message: '请输入用户名!' }],
     password: [{ required: true, message: '请输入密码!' }],
     confirm: [{ required: true, message: '请输入确认密码!' }],
     mobile: [{ required: true, message: '请输入手机号码!' }],
-    captcha: [{ required: true, message: '请输入验证码!' }]
-  };
-  registerLoading = false;
-  captchaSending = false;
-  captchaInterval = -1;
-  captchaCountdown = 60;
+    captcha: [{ required: true, message: '请输入验证码!' }],
+  }
+  registerLoading = false
+  captchaSending = false
+  captchaInterval = -1
+  captchaCountdown = 60
 
   handleSendCaptcha() {
     this.$refs.registerForm.validateField('mobile', (error: string) => {
@@ -86,69 +86,69 @@ export default class Register extends Vue {
           .post('api/captcha/mobile', { mobile: this.registerForm.mobile, service: 'user-register' })
           .then(({ data = {} }) => {
             if (data.success) {
-              this.captchaSending = true;
-              this.captchaCountdown = 60;
+              this.captchaSending = true
+              this.captchaCountdown = 60
               this.captchaInterval = setInterval(() => {
                 if (this.captchaCountdown > 1) {
-                  this.captchaCountdown--;
+                  this.captchaCountdown--
                 } else {
-                  this.captchaSending = false;
-                  clearInterval(this.captchaInterval);
+                  this.captchaSending = false
+                  clearInterval(this.captchaInterval)
                 }
-              }, 1000);
+              }, 1000)
             } else {
-              this.$message.error('发送失败');
+              this.$message.error('发送失败')
             }
           })
           .catch(() => {
-            this.$message.error('发送失败');
-          });
+            this.$message.error('发送失败')
+          })
       }
-    });
+    })
   }
 
   handleUserRegister(e: any) {
-    e.preventDefault();
+    e.preventDefault()
     this.$refs.registerForm.validate((validate: boolean) => {
       if (validate) {
-        this.registerLoading = true;
+        this.registerLoading = true
         this.$axios
           .post('api/user/register', this.registerForm)
           .then(({ data = {} }) => {
             if (data.success) {
-              this.$message.success('注册成功');
+              this.$message.success('注册成功')
               setTimeout(() => {
-                this.handleRegisterSuccess();
-              }, 500);
+                this.handleRegisterSuccess()
+              }, 500)
             } else {
-              this.handleRegisterFailed();
+              this.handleRegisterFailed()
             }
           })
           .catch(() => {
-            this.handleRegisterFailed();
+            this.handleRegisterFailed()
           })
           .finally(() => {
-            this.registerLoading = false;
-          });
+            this.registerLoading = false
+          })
       }
-    });
+    })
   }
 
   handleRegisterSuccess() {
     this.$router.replace({
-      name: 'main'
-    });
+      name: 'main',
+    })
   }
 
   handleRegisterFailed() {
-    this.$message.error('注册失败');
+    this.$message.error('注册失败')
   }
 
   handleLoginAccount(e: any) {
-    e.preventDefault();
+    e.preventDefault()
     this.$router.replace({
-      name: 'login'
-    });
+      name: 'login',
+    })
   }
 }
 </script>

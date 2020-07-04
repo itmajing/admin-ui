@@ -1,7 +1,7 @@
-import { HashRouterTab, RouterTab, Menu, UtilsObject } from './types/utils';
-import { RouteConfig } from 'vue-router';
-import sha256 from 'js-sha256';
-import routes from '@/router/routes';
+import { HashRouterTab, RouterTab, Menu, UtilsObject } from './types/utils'
+import { RouteConfig } from 'vue-router'
+import sha256 from 'js-sha256'
+import routes from '@/router/routes'
 
 class AuUtils implements UtilsObject {
   /**
@@ -10,7 +10,7 @@ class AuUtils implements UtilsObject {
    * @param data 值
    */
   setSessionStorageItem(key: string, data: any) {
-    sessionStorage.setItem(key, JSON.stringify(data));
+    sessionStorage.setItem(key, JSON.stringify(data))
   }
 
   /**
@@ -19,16 +19,16 @@ class AuUtils implements UtilsObject {
    * @returns {*} 值
    */
   getSessionStorageItem(key: string) {
-    const json = sessionStorage.getItem(key);
+    const json = sessionStorage.getItem(key)
     if (json) {
-      return JSON.parse(json);
+      return JSON.parse(json)
     } else {
-      return undefined;
+      return undefined
     }
   }
 
   removeSessionStorageItem(key: string) {
-    sessionStorage.removeItem(key);
+    sessionStorage.removeItem(key)
   }
 
   /**
@@ -37,7 +37,7 @@ class AuUtils implements UtilsObject {
    * @param data 值
    */
   setLocalStorageItem(key: string, data: any) {
-    localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(key, JSON.stringify(data))
   }
 
   /**
@@ -46,76 +46,76 @@ class AuUtils implements UtilsObject {
    * @returns {*} 值
    */
   getLocalStorageItem(key: string) {
-    const json = localStorage.getItem(key);
+    const json = localStorage.getItem(key)
     if (json) {
-      return JSON.parse(json);
+      return JSON.parse(json)
     } else {
-      return undefined;
+      return undefined
     }
   }
 
   removeLocalStorageItem(key: string) {
-    localStorage.removeItem(key);
+    localStorage.removeItem(key)
   }
 
   /**
    * 生成菜单列表
    */
   generateMenuList(routes: RouteConfig[], parent?: Menu): Menu[] {
-    const menuList: Menu[] = [];
+    const menuList: Menu[] = []
     for (const route of routes) {
-      const meta = route.meta;
+      const meta = route.meta
       // 判断是否隐藏
       if (!meta || (meta && !meta.hide)) {
         if (!route.name) {
-          throw new Error('route name must not be null');
+          throw new Error('route name must not be null')
         }
 
         const menu: Menu = {
           name: route.name,
           title: (meta && meta.title) || route.name,
           icon: (meta && meta.icon) || 'smile',
-          children: []
-        };
+          children: [],
+        }
 
         if (parent) {
-          menu.parent = parent;
+          menu.parent = parent
         }
 
         // 遍历子菜单
-        const children = route.children;
+        const children = route.children
         if (children && children.length > 0) {
-          const submenu = this.generateMenuList(children, menu);
+          const submenu = this.generateMenuList(children, menu)
           if (submenu.length > 0) {
-            menu.children = submenu;
+            menu.children = submenu
           }
         }
 
-        menuList.push(menu);
+        menuList.push(menu)
       }
     }
-    return menuList;
+    return menuList
   }
 
   /**
    * 生成路由标签
    */
   generateRouterTab(name: string): RouterTab | null {
-    const router = this.getRouter(routes, name);
+    const router = this.getRouter(routes, name)
     if (router.children) {
-      return null;
+      return null
     }
 
-    const tabName = router.name || '';
-    const tabTitle = (router.meta && router.meta.title) || tabName;
+    const tabName = router.name || ''
+    const tabTitle = (router.meta && router.meta.title) || tabName
 
     return {
       name: tabName,
       title: tabTitle,
       closable: !(router.meta && router.meta.closable === false),
       query: {},
-      params: {}
-    };
+      params: {},
+    }
   }
 
   generateDefaultRouterTab() {
@@ -124,10 +124,10 @@ class AuUtils implements UtilsObject {
       title: '首页',
       closable: false,
       query: {},
-      params: {}
-    };
+      params: {},
+    }
 
-    return this.generateHashRouterTab(defaultTab);
+    return this.generateHashRouterTab(defaultTab)
   }
 
   /**
@@ -140,21 +140,21 @@ class AuUtils implements UtilsObject {
         title: tab.title || '',
         closable: tab.closable,
         query: tab.query || {},
-        params: tab.params || {}
-      };
+        params: tab.params || {},
+      }
 
       // 路由参数类型转换
       for (const key of Object.keys(menuTab.params as object)) {
-        menuTab.params[key] = `${menuTab.params[key]}`;
+        menuTab.params[key] = `${menuTab.params[key]}`
       }
       for (const key of Object.keys(menuTab.query as object)) {
-        menuTab.query[key] = `${menuTab.query[key]}`;
+        menuTab.query[key] = `${menuTab.query[key]}`
       }
 
-      menuTab.hash = sha256.sha256(JSON.stringify(menuTab));
-      return menuTab;
+      menuTab.hash = sha256.sha256(JSON.stringify(menuTab))
+      return menuTab
     } else {
-      throw new Error(`Illegal menu tab: ${JSON.stringify(tab)} `);
+      throw new Error(`Illegal menu tab: ${JSON.stringify(tab)} `)
     }
   }
 
@@ -162,37 +162,37 @@ class AuUtils implements UtilsObject {
    * 查找菜单
    */
   findMenuByName(menuList: Menu[], name: string) {
-    let result!: Menu;
+    let result!: Menu
     for (const menu of menuList) {
       if (menu.name === name) {
-        result = menu;
-        break;
+        result = menu
+        break
       }
 
       if (menu.children.length > 0) {
-        result = this.findMenuByName(menu.children, name);
+        result = this.findMenuByName(menu.children, name)
         if (result) {
-          break;
+          break
         }
       }
     }
 
-    return result;
+    return result
   }
 
   /**
    * 查找顶级菜单
    */
   findTopMenuByName(menuList: Menu[], name: string) {
-    let result!: Menu;
-    let menu = this.findMenuByName(menuList, name);
+    let result!: Menu
+    let menu = this.findMenuByName(menuList, name)
     if (menu) {
       while (menu.parent) {
-        menu = menu.parent;
+        menu = menu.parent
       }
-      result = menu;
+      result = menu
     }
-    return result;
+    return result
   }
 
   /**
@@ -202,21 +202,21 @@ class AuUtils implements UtilsObject {
    * @returns {*} 路由信息
    */
   getRouter(routes: RouteConfig[], name: string) {
-    let result!: RouteConfig;
+    let result!: RouteConfig
     for (const router of routes) {
       if (name === router.name) {
-        result = router;
+        result = router
       } else {
         if (router.children && router.children.length > 0) {
-          result = this.getRouter(router.children, name);
+          result = this.getRouter(router.children, name)
         }
       }
       if (result) {
-        break;
+        break
       }
     }
-    return result;
+    return result
   }
 }
 
-export default new AuUtils();
+export default new AuUtils()

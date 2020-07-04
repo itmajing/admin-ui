@@ -94,42 +94,42 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Mutation } from 'vuex-class';
+import { Component, Vue } from 'vue-property-decorator'
+import { Mutation } from 'vuex-class'
 
 @Component
 export default class Login extends Vue {
-  $refs!: { passwordForm: HTMLFormElement; mobileForm: HTMLFormElement };
+  $refs!: { passwordForm: HTMLFormElement; mobileForm: HTMLFormElement }
   passwordForm = {
     username: '',
     password: '',
-    remember: false
-  };
+    remember: false,
+  }
   passwordRules = {
     username: [{ required: true, message: '请输入用户名!' }],
-    password: [{ required: true, message: '请输入密码!' }]
-  };
+    password: [{ required: true, message: '请输入密码!' }],
+  }
   mobileForm = {
     mobile: '',
-    captcha: ''
-  };
+    captcha: '',
+  }
   mobileRules = {
     mobile: [{ required: true, message: '请输入手机号!' }],
-    captcha: [{ required: true, message: '请输入验证码!' }]
-  };
-  loginLoading = false;
-  captchaSending = false;
-  captchaInterval = -1;
-  captchaCountdown = 60;
+    captcha: [{ required: true, message: '请输入验证码!' }],
+  }
+  loginLoading = false
+  captchaSending = false
+  captchaInterval = -1
+  captchaCountdown = 60
 
-  @Mutation setAccessToken!: Function;
+  @Mutation setAccessToken!: Function
 
   handleTabsChange() {
     if (this.$refs.passwordForm) {
-      this.$refs.passwordForm.clearValidate();
+      this.$refs.passwordForm.clearValidate()
     }
     if (this.$refs.mobileForm) {
-      this.$refs.mobileForm.clearValidate();
+      this.$refs.mobileForm.clearValidate()
     }
   }
 
@@ -140,107 +140,107 @@ export default class Login extends Vue {
           .post('api/captcha/mobile', { mobile: this.mobileForm.mobile, service: 'user-login' })
           .then(({ data = {} }) => {
             if (data.success) {
-              this.captchaSending = true;
-              this.captchaCountdown = 60;
+              this.captchaSending = true
+              this.captchaCountdown = 60
               this.captchaInterval = setInterval(() => {
                 if (this.captchaCountdown > 1) {
-                  this.captchaCountdown--;
+                  this.captchaCountdown--
                 } else {
-                  this.captchaSending = false;
-                  clearInterval(this.captchaInterval);
+                  this.captchaSending = false
+                  clearInterval(this.captchaInterval)
                 }
-              }, 1000);
+              }, 1000)
             } else {
-              this.$message.error('发送失败');
+              this.$message.error('发送失败')
             }
           })
           .catch(() => {
-            this.$message.error('发送失败');
-          });
+            this.$message.error('发送失败')
+          })
       }
-    });
+    })
   }
 
   /**
    * 使用账号密码登录
    */
   handlePasswordLogin(e: any) {
-    e.preventDefault();
+    e.preventDefault()
     this.$refs.passwordForm.validate((validate: boolean) => {
       if (validate) {
-        this.loginLoading = true;
+        this.loginLoading = true
         this.$axios
           .post('api/auth/password', this.mobileForm)
           .then(({ data = {} }) => {
             if (data.success) {
-              this.$message.success('登录成功');
+              this.$message.success('登录成功')
               setTimeout(() => {
-                this.handleLoginSuccess(data.data.accessToken);
-              }, 500);
+                this.handleLoginSuccess(data.data.accessToken)
+              }, 500)
             } else {
-              this.handleLoginFailed();
+              this.handleLoginFailed()
             }
           })
           .catch(() => {
-            this.handleLoginFailed();
+            this.handleLoginFailed()
           })
           .finally(() => {
-            this.loginLoading = false;
-          });
+            this.loginLoading = false
+          })
       }
-    });
+    })
   }
 
   /**
    * 使用手机验证码登录
    */
   handleMobileLogin(e: any) {
-    e.preventDefault();
+    e.preventDefault()
     this.$refs.mobileForm.validate((validate: boolean) => {
       if (validate) {
         this.$axios
           .post('api/auth/mobile', this.passwordForm)
           .then(({ data = {} }) => {
             if (data.success) {
-              this.$message.success('登录成功');
+              this.$message.success('登录成功')
               setTimeout(() => {
-                this.handleLoginSuccess(data.data.accessToken);
-              }, 500);
+                this.handleLoginSuccess(data.data.accessToken)
+              }, 500)
             } else {
-              this.handleLoginFailed();
+              this.handleLoginFailed()
             }
           })
           .catch(() => {
-            this.handleLoginFailed();
+            this.handleLoginFailed()
           })
           .finally(() => {
-            this.loginLoading = false;
-          });
+            this.loginLoading = false
+          })
       }
-    });
+    })
   }
 
   handleLoginSuccess(accessToken: string) {
-    this.setAccessToken(accessToken);
+    this.setAccessToken(accessToken)
     this.$router.replace({
-      name: 'main'
-    });
+      name: 'main',
+    })
   }
 
   handleLoginFailed() {
-    this.$message.error('登录失败');
+    this.$message.error('登录失败')
   }
 
   handleForgotPassword(e: any) {
-    e.preventDefault();
-    console.log('忘记密码');
+    e.preventDefault()
+    console.log('忘记密码')
   }
 
   handleRegisterAccount(e: any) {
-    e.preventDefault();
+    e.preventDefault()
     this.$router.replace({
-      name: 'register'
-    });
+      name: 'register',
+    })
   }
 }
 </script>

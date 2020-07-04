@@ -1,32 +1,32 @@
-import { RouteConfig } from 'vue-router';
+import { RouteConfig } from 'vue-router'
 
 // 登录/注册
-import Login from '@/views/user/login/login.vue';
-import Register from '@/views/user/register/register.vue';
+import Login from '@/views/user/login/login.vue'
+import Register from '@/views/user/register/register.vue'
 
 // 主框架
-import Main from '@/views/main/main.vue';
+import Main from '@/views/main/main.vue'
 
 // 首页
-import Home from '@/views/home/home.vue';
+import Home from '@/views/home/home.vue'
 
 // 账号
-import AccountCenter from '@/views/account/account-center.vue';
-import AccountSetting from '@/views/account/account-setting.vue';
+import AccountCenter from '@/views/account/account-center.vue'
+import AccountSetting from '@/views/account/account-setting.vue'
 
 // 控制台
-import Analysis from '@/views/dashboard/analysis.vue';
-import Monitor from '@/views/dashboard/monitor.vue';
-import Workplace from '@/views/dashboard/workplace.vue';
+import Analysis from '@/views/dashboard/analysis.vue'
+import Monitor from '@/views/dashboard/monitor.vue'
+import Workplace from '@/views/dashboard/workplace.vue'
 
 // 表单页
-import BasicForm from '@/views/form/basic-form.vue';
-import StepForm from '@/views/form/step-form.vue';
-import AdvancedForm from '@/views/form/advanced-form.vue';
+import BasicForm from '@/views/form/basic-form.vue'
+import StepForm from '@/views/form/step-form.vue'
+import AdvancedForm from '@/views/form/advanced-form.vue'
 
 // 错误页
-import NotFound from '@/views/exception/notfound.vue';
-import Forbidden from '@/views/exception/forbidden.vue';
+import NotFound from '@/views/exception/notfound.vue'
+import Forbidden from '@/views/exception/forbidden.vue'
 
 /**
  * meta 可选参数:
@@ -40,7 +40,7 @@ const routes: RouteConfig[] = [
     path: '/',
     name: 'main',
     meta: {
-      hide: true
+      hide: true,
     },
     component: Main,
     children: [
@@ -49,17 +49,17 @@ const routes: RouteConfig[] = [
         path: 'home',
         meta: {
           title: '首页',
-          closable: false
+          closable: false,
         },
-        component: Home
-      }
-    ]
+        component: Home,
+      },
+    ],
   },
   {
     path: '/account',
     name: 'account',
     meta: {
-      hide: true
+      hide: true,
     },
     component: Main,
     children: [
@@ -67,26 +67,26 @@ const routes: RouteConfig[] = [
         name: 'account-center',
         path: 'center',
         meta: {
-          title: '个人中心'
+          title: '个人中心',
         },
-        component: AccountCenter
+        component: AccountCenter,
       },
       {
         name: 'account-setting',
         path: 'setting',
         meta: {
-          title: '个人设置'
+          title: '个人设置',
         },
-        component: AccountSetting
-      }
-    ]
+        component: AccountSetting,
+      },
+    ],
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     meta: {
-      title: 'Dashboard',
-      icon: 'dashboard'
+      title: '仪表盘',
+      icon: 'dashboard',
     },
     component: Main,
     children: [
@@ -94,34 +94,34 @@ const routes: RouteConfig[] = [
         name: 'analysis',
         path: 'analysis',
         meta: {
-          title: '分析页'
+          title: '分析页',
         },
-        component: Analysis
+        component: Analysis,
       },
       {
         name: 'monitor',
         path: 'monitor',
         meta: {
-          title: '监控页'
+          title: '监控页',
         },
-        component: Monitor
+        component: Monitor,
       },
       {
         name: 'workplace',
         path: 'workplace',
         meta: {
-          title: '工作台'
+          title: '工作台',
         },
-        component: Workplace
-      }
-    ]
+        component: Workplace,
+      },
+    ],
   },
   {
     path: '/form',
     name: 'form',
     meta: {
       title: '表单页',
-      icon: 'form'
+      icon: 'form',
     },
     component: Main,
     children: [
@@ -129,34 +129,34 @@ const routes: RouteConfig[] = [
         path: 'basic-form',
         name: 'basic-form',
         meta: {
-          title: '基础表单'
+          title: '基础表单',
         },
-        component: BasicForm
+        component: BasicForm,
       },
       {
         path: 'step-form',
         name: 'step-form',
         meta: {
-          title: '分步表单'
+          title: '分步表单',
         },
-        component: StepForm
+        component: StepForm,
       },
       {
         path: 'advanced-form',
         name: 'advanced-form',
         meta: {
-          title: '高级表单'
+          title: '高级表单',
         },
-        component: AdvancedForm
-      }
-    ]
+        component: AdvancedForm,
+      },
+    ],
   },
   {
     path: '/exception',
     name: 'exception',
     meta: {
       title: '异常页',
-      icon: 'warning'
+      icon: 'warning',
     },
     component: Main,
     children: [
@@ -164,44 +164,46 @@ const routes: RouteConfig[] = [
         path: '403',
         name: 'forbidden',
         meta: {
-          title: '403'
+          title: '403',
         },
-        component: Forbidden
+        component: Forbidden,
       },
       {
         path: '404',
         name: 'notfound',
         meta: {
-          title: '404'
+          title: '404',
         },
-        component: NotFound
-      }
-    ]
+        component: NotFound,
+      },
+    ],
   },
   {
     path: '/login',
     name: 'login',
     meta: {
-      hide: true
+      hide: true,
     },
-    component: Login
+    component: Login,
   },
   {
     path: '/register',
     name: 'register',
     meta: {
-      hide: true
+      hide: true,
     },
-    component: Register
+    component: Register,
   },
   {
     path: '*',
     name: '404',
     meta: {
-      hide: true
+      hide: true,
     },
-    component: NotFound
-  }
-];
+    component: NotFound,
+  },
+]
 
-export default routes;
+const constantRoutes: RouteConfig[] = []
+
+export default routes

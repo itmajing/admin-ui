@@ -99,59 +99,59 @@
 </template>
 
 <script lang="ts">
-import { Component, Provide, Vue, Watch } from 'vue-property-decorator';
-import SideMenu from '@/components/menu/side-menu.vue';
-import { Getter, Mutation, State } from 'vuex-class';
-import { HashRouterTab, Menu } from '@/libs/utils/types/utils';
+import { Component, Provide, Vue, Watch } from 'vue-property-decorator'
+import SideMenu from '@/components/menu/side-menu.vue'
+import { Getter, Mutation, State } from 'vuex-class'
+import { HashRouterTab, Menu } from '@/libs/utils/types/utils'
 
 @Component({
   components: {
-    SideMenu
-  }
+    SideMenu,
+  },
 })
 export default class Main extends Vue {
-  cachedTitle = '';
-  collapsed = false;
-  routerView = true;
+  cachedTitle = ''
+  collapsed = false
+  routerView = true
 
-  @State(state => state.application.openedTabs) openedTabs!: HashRouterTab[];
-  @State(state => state.application.activeTab) activeTab!: HashRouterTab;
-  @Mutation initOpenedTab!: Function;
-  @Mutation addOpenedTab!: Function;
-  @Mutation setActiveTab!: Function;
-  @Mutation removeOpenedTab!: Function;
-  @Mutation removeAllOpenedTab!: Function;
-  @Mutation removeOtherOpenedTab!: Function;
-  @Mutation removeAccessToken!: Function;
-  @Getter menuList!: Menu[];
+  @State(state => state.application.openedTabs) openedTabs!: HashRouterTab[]
+  @State(state => state.application.activeTab) activeTab!: HashRouterTab
+  @Mutation initOpenedTab!: Function
+  @Mutation addOpenedTab!: Function
+  @Mutation setActiveTab!: Function
+  @Mutation removeOpenedTab!: Function
+  @Mutation removeAllOpenedTab!: Function
+  @Mutation removeOtherOpenedTab!: Function
+  @Mutation removeAccessToken!: Function
+  @Getter menuList!: Menu[]
 
-  @Provide('handleOpenTab') handleOpenTabFunction = this.handleOpenTab;
-  @Provide('handleCloseTab') handleCloseTabFunction = this.handleCloseTab;
+  @Provide('handleOpenTab') handleOpenTabFunction = this.handleOpenTab
+  @Provide('handleCloseTab') handleCloseTabFunction = this.handleCloseTab
 
   @Watch('activeTab')
   onActiveTabChange(routerTab: HashRouterTab) {
     // 缓存标题
     if (!this.cachedTitle) {
-      this.cachedTitle = document.title;
+      this.cachedTitle = document.title
     }
 
     // 更新标题
     if (routerTab.title) {
-      document.title = `${routerTab.title} - ${this.cachedTitle} `;
+      document.title = `${routerTab.title} - ${this.cachedTitle} `
     } else {
-      document.title = this.cachedTitle;
+      document.title = this.cachedTitle
     }
 
     // 跳转路由
     if (routerTab.name) {
-      this.$logger.info(`current route: ${this.$route.name}, target route: ${routerTab.name}`);
+      this.$logger.info(`current route: ${this.$route.name}, target route: ${routerTab.name}`)
 
       if (this.$route.name !== routerTab.name) {
         this.$router.replace({
           name: routerTab.name,
           params: routerTab.params,
-          query: routerTab.query
-        });
+          query: routerTab.query,
+        })
       }
     }
   }
@@ -160,23 +160,23 @@ export default class Main extends Vue {
    * 选择菜单
    */
   handleMenuSelect(param: any) {
-    this.$logger.info(`select menu, key: ${param.key}, path: ${param.keyPath}`);
-    this.handleOpenTab(param.key);
+    this.$logger.info(`select menu, key: ${param.key}, path: ${param.keyPath}`)
+    this.handleOpenTab(param.key)
   }
 
   /**
    * 侧边栏收起/展开
    */
   handleMenuFold() {
-    this.collapsed = !this.collapsed;
+    this.collapsed = !this.collapsed
   }
 
   /**
    * 点击标签
    */
   handleTabChange(hash: string) {
-    this.$logger.info(`click tab, hash: ${hash}`);
-    this.setActiveTab(hash);
+    this.$logger.info(`click tab, hash: ${hash}`)
+    this.setActiveTab(hash)
   }
 
   /**
@@ -184,25 +184,25 @@ export default class Main extends Vue {
    */
   handleTabEdit(hash: string, action: string) {
     if (action === 'remove') {
-      this.$logger.info(`remove tab, hash: ${hash}`);
-      this.removeOpenedTab(hash);
+      this.$logger.info(`remove tab, hash: ${hash}`)
+      this.removeOpenedTab(hash)
     }
   }
 
   handleRefreshView() {
-    this.routerView = false;
+    this.routerView = false
     this.$nextTick(() => {
-      this.routerView = true;
-    });
+      this.routerView = true
+    })
   }
 
   handleTabMenuClick({ key = '' }) {
     if (key === 'close-all') {
-      this.removeAllOpenedTab();
+      this.removeAllOpenedTab()
     } else if (key === 'close-other') {
-      this.removeOtherOpenedTab();
+      this.removeOtherOpenedTab()
     } else if (key === 'reload-page') {
-      this.handleRefreshView();
+      this.handleRefreshView()
     }
   }
 
@@ -211,16 +211,16 @@ export default class Main extends Vue {
    */
   handleDropdownClick({ key = '' }) {
     if (key === 'user') {
-      const name = 'account-center';
-      this.handleOpenTab(name);
+      const name = 'account-center'
+      this.handleOpenTab(name)
     } else if (key === 'setting') {
-      const name = 'account-setting';
-      this.handleOpenTab(name);
+      const name = 'account-setting'
+      this.handleOpenTab(name)
     } else if (key === 'exit') {
-      this.removeAccessToken();
+      this.removeAccessToken()
       this.$router.replace({
-        name: 'login'
-      });
+        name: 'login',
+      })
     }
   }
 
@@ -231,15 +231,15 @@ export default class Main extends Vue {
    * @param params 路由参数
    */
   handleOpenTab(name: string, query?: any, params?: any) {
-    const routerTab = this.$utils.generateRouterTab(name);
+    const routerTab = this.$utils.generateRouterTab(name)
     if (routerTab) {
       if (query) {
-        routerTab.query = query;
+        routerTab.query = query
       }
       if (params) {
-        routerTab.query = params;
+        routerTab.query = params
       }
-      this.addOpenedTab(routerTab);
+      this.addOpenedTab(routerTab)
     }
   }
 
@@ -247,16 +247,16 @@ export default class Main extends Vue {
    * 关闭当前标签页
    */
   handleCloseTab() {
-    this.removeOpenedTab(this.activeTab.hash);
+    this.removeOpenedTab(this.activeTab.hash)
   }
 
   mounted(): void {
-    this.$logger.info(window.navigator.userAgent);
-    this.initOpenedTab(this.$route);
+    this.$logger.info(window.navigator.userAgent)
+    this.initOpenedTab(this.$route)
   }
 
   beforeDestroy(): void {
-    document.title = this.cachedTitle;
+    document.title = this.cachedTitle
   }
 }
 </script>
