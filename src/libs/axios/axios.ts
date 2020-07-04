@@ -16,19 +16,19 @@ const jsonHeader = {
 
 const instance: AxiosInstance = axios.create({
   timeout: 60 * 1000,
-  baseURL: global.url.api,
+  baseURL: global.httpBaseUrl,
   headers: jsonHeader,
 })
 
 instance.interceptors.request.use(
   config => {
-    // 添加全局Token
+    // add token for all request
     const accessToken = utils.getSessionStorageItem(AUTH_HEADER)
     if (accessToken) {
       config.headers[AUTH_HEADER] = accessToken
     }
 
-    // Get请求添加时间戳
+    // add timestamp for get request
     if (config.method === 'get') {
       config.params = {
         ...config.params,

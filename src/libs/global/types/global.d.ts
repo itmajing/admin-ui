@@ -1,9 +1,7 @@
 import Vue from 'vue'
 
 interface GlobalObject {
-  url: {
-    api: string
-  }
+  httpBaseUrl:string
 }
 
 declare module 'vue/types/vue' {
