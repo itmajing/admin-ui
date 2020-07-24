@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from 'axios'
+import Axios, { AxiosInstance } from 'axios'
 import router from '@/router'
-import utils from '@/libs/utils/utils'
-import global from '@/libs/global/global'
-import { AUTH_HEADER } from '@/libs/global/constant'
+import { AuUtils } from '@/libs/utils'
+import { AuGlobal } from '@/libs/global'
+import { AUTH_HEADER } from '@/constant'
 
 const formHeader = {
   'Content-Type': 'application/x-www-form-urlencoded',
@@ -14,16 +14,16 @@ const jsonHeader = {
   'X-Requested-With': 'XMLHttpRequest',
 }
 
-const instance: AxiosInstance = axios.create({
-  timeout: 60 * 1000,
-  baseURL: global.httpBaseUrl,
+const instance: AxiosInstance = Axios.create({
+  timeout: 30 * 1000,
+  baseURL: AuGlobal.httpBaseUrl,
   headers: jsonHeader,
 })
 
 instance.interceptors.request.use(
   config => {
     // add token for all request
-    const accessToken = utils.getSessionStorageItem(AUTH_HEADER)
+    const accessToken = AuUtils.getSessionStorageItem(AUTH_HEADER)
     if (accessToken) {
       config.headers[AUTH_HEADER] = accessToken
     }

@@ -7,4 +7,6 @@ const plugin: PluginObject<any> = {
   },
 }
 
+export { AuGlobal }
+
 export default plugin

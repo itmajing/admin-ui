@@ -7,4 +7,6 @@ const plugin: PluginObject<any> = {
   },
 }
 
+export { AuAxios }
+
 export default plugin

@@ -4,14 +4,15 @@
       mode="inline"
       theme="light"
       :inlineCollapsed="collapsed"
-      :openKeys.sync="openKeys"
-      :selectedKeys.sync="selectedKeys"
+      :openKeys="openKeys"
+      :selectedKeys="selectedKeys"
       @click="handleMenuClick"
       @select="handleMenuSelect"
+      @openChange="handleOpenChange"
     >
       <template v-for="menu in menuList">
         <a-menu-item :key="menu.name" v-if="!menu.children || menu.children.length === 0">
-          <a-icon :type="menu.icon" />
+          <a-icon v-if="menu.icon" :type="menu.icon" />
           <span>{{ menu.title }}</span>
         </a-menu-item>
         <side-sub-menu :key="menu.name" :menu="menu" v-else />
@@ -23,7 +24,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Menu as AntMenu } from 'ant-design-vue'
-import { Menu } from '@/libs/utils/types/utils'
+import { findParentMenuByName } from '@/router/utils'
 
 /**
  * 子菜单
@@ -32,12 +33,12 @@ const SideSubMenu = {
   template: `
     <a-sub-menu :key="menu.name" v-bind="$props" v-on="$listeners" v-else>
       <template slot="title">
-        <a-icon :type="menu.icon" />
+        <a-icon v-if="menu.icon" :type="menu.icon" />
         <span>{{ menu.title }}</span>
       </template>
       <template v-for="child in menu.children">
         <a-menu-item :key="child.name" v-if="!child.children || child.children.length === 0">
-          <a-icon :type="child.icon" />
+          <a-icon v-if="child.icon" :type="child.icon" />
           <span>{{ child.title }}</span>
         </a-menu-item>
         <side-sub-menu :key="child.name" :menu="child" v-else />
@@ -66,7 +67,8 @@ const SideSubMenu = {
 export default class SideMenu extends Vue {
   @Prop(String) selectedKey!: string
   @Prop(Boolean) readonly collapsed!: boolean
-  @Prop(Array) readonly menuList!: Menu[]
+  @Prop(Boolean) readonly accordion!: boolean
+  @Prop(Array) readonly menuList!: Array<any>
 
   openKeys: string[] = []
   selectedKeys: string[] = []
@@ -74,8 +76,22 @@ export default class SideMenu extends Vue {
   @Watch('selectedKey')
   onSelectedKeyChange(key: string) {
     this.selectedKeys = key ? [key] : []
-    const menus = this.$utils.findParentMenuByName(this.menuList, key)
-    this.openKeys = menus.map(menu => menu.name)
+    const parentMenus = findParentMenuByName(this.menuList, key)
+    this.openKeys = parentMenus.map(menu => menu.name)
+  }
+
+  handleOpenChange(openKeys: string[]) {
+    if (this.accordion) {
+      const latestOpenKey = openKeys.find(key => this.openKeys.indexOf(key) === -1)
+      if (latestOpenKey) {
+        const parentMenus = findParentMenuByName(this.menuList, latestOpenKey)
+        const parentKeys = parentMenus.map(menu => menu.name)
+        this.openKeys = [...parentKeys, latestOpenKey]
+        return
+      }
+    }
+
+    this.openKeys = openKeys
   }
 
   handleMenuClick(payload: any) {

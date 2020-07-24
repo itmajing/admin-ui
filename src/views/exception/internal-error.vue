@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>NotFound</div>
+    <div>InternalError</div>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component
-export default class NotFound extends Vue {}
+export default class InternalError extends Vue {}
 </script>
 
 <style lang="less" scoped></style>

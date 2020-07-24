@@ -1,25 +1,48 @@
 import { LoggerObject, LoggerOption } from './types/logger'
 
+const LOG_LEVEL = {
+  debug: 0,
+  info: 5,
+  warn: 10,
+  error: 15,
+}
+
 class AuLogger implements LoggerObject {
-  level = 'level'
+  level = 'info'
+  value = LOG_LEVEL.info
 
   constructor(options: LoggerOption = { level: 'info' }) {
     if (options.level) {
       this.level = options.level
+      this.value = LOG_LEVEL[options.level] || LOG_LEVEL.info
     }
   }
 
-  info(msg: any) {
-    console.info(msg)
+  debug(message?: any, ...optionalParams: any[]): void {
+    if (this.value === LOG_LEVEL.debug) {
+      console.info(message, optionalParams)
+    }
   }
 
-  warn(msg: any) {
-    console.warn(msg)
+  info(message?: any, ...optionalParams: any[]): void {
+    if (this.value <= LOG_LEVEL.info) {
+      console.info(message, optionalParams)
+    }
   }
 
-  error(msg: any) {
-    console.error(msg)
+  warn(message?: any, ...optionalParams: any[]): void {
+    if (this.value <= LOG_LEVEL.warn) {
+      console.warn(message, optionalParams)
+    }
+  }
+
+  error(message?: any, ...optionalParams: any[]): void {
+    if (this.value <= LOG_LEVEL.error) {
+      console.error(message, optionalParams)
+    }
   }
 }
 
-export default AuLogger
+export { AuLogger }
+
+export default new AuLogger()

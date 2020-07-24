@@ -25,4 +25,4 @@ class AuDate implements DateObject {
   }
 }
 
-export default AuDate
+export default new AuDate()

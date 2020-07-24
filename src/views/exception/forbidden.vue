@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>403</div>
+    <div>Forbidden</div>
   </div>
 </template>
 

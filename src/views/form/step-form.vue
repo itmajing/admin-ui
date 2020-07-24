@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>分步表单</div>
+    <a-input></a-input>
   </div>
 </template>
 

@@ -1,67 +1,66 @@
 import { RouteConfig } from 'vue-router'
+import { MainLayout, UserLayout } from '@/layouts'
 
-// 登录/注册
-import Login from '@/views/user/login/login.vue'
-import Register from '@/views/user/register/register.vue'
-
-// 主框架
-import Main from '@/views/main/main.vue'
-
-// 首页
-import Home from '@/views/home/home.vue'
-
-// 账号
-import AccountCenter from '@/views/account/account-center.vue'
-import AccountSetting from '@/views/account/account-setting.vue'
-
-// 控制台
-import Analysis from '@/views/dashboard/analysis.vue'
-import Monitor from '@/views/dashboard/monitor.vue'
-import Workplace from '@/views/dashboard/workplace.vue'
-
-// 表单页
-import BasicForm from '@/views/form/basic-form.vue'
-import StepForm from '@/views/form/step-form.vue'
-import AdvancedForm from '@/views/form/advanced-form.vue'
-
-// 错误页
-import NotFound from '@/views/exception/notfound.vue'
-import Forbidden from '@/views/exception/forbidden.vue'
+const userRoutes: RouteConfig[] = [
+  {
+    path: '/user',
+    component: UserLayout,
+    redirect: '/user/login',
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/login.vue'),
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/register.vue'),
+      },
+    ],
+  },
+]
 
 /**
  * meta 可选参数:
- * title: 菜单标题
- * icon: 菜单图标
- * hide: 菜单隐藏
- * closable: 关闭标签
+ *  title {string}: 菜单标题
+ *  icon {string}: 菜单图标，仅支持ant.design内置图标
+ *  hidden {boolean}: 是否隐藏菜单，默认值：false
+ *  permission {array}: 权限列表
+ *  target {_view|_blank|_self}: 文档打开位置
+ *  closable {boolean}: 是否允许关闭标签，默认值：true
  */
-const routes: RouteConfig[] = [
+/**
+ * 首页路由
+ */
+const homeRoute: RouteConfig = {
+  name: 'home',
+  path: '/home',
+  meta: {
+    title: '首页',
+    closable: false,
+  },
+  component: () => import(/* webpackChunkName: "home" */ '@/views/home/home.vue'),
+}
+
+const appRoutes: RouteConfig[] = [
   {
     path: '/',
     name: 'main',
+    redirect: '/home',
+    component: MainLayout,
     meta: {
-      hide: true,
+      hidden: true,
     },
-    component: Main,
-    children: [
-      {
-        name: 'home',
-        path: 'home',
-        meta: {
-          title: '首页',
-          closable: false,
-        },
-        component: Home,
-      },
-    ],
+    children: [homeRoute],
   },
   {
     path: '/account',
     name: 'account',
+    component: MainLayout,
     meta: {
-      hide: true,
+      hidden: true,
     },
-    component: Main,
     children: [
       {
         name: 'account-center',
@@ -69,7 +68,7 @@ const routes: RouteConfig[] = [
         meta: {
           title: '个人中心',
         },
-        component: AccountCenter,
+        component: () => import(/* webpackChunkName: "account" */ '@/views/account/account-center.vue'),
       },
       {
         name: 'account-setting',
@@ -77,7 +76,7 @@ const routes: RouteConfig[] = [
         meta: {
           title: '个人设置',
         },
-        component: AccountSetting,
+        component: () => import(/* webpackChunkName: "account" */ '@/views/account/account-setting.vue'),
       },
     ],
   },
@@ -88,31 +87,31 @@ const routes: RouteConfig[] = [
       title: '仪表盘',
       icon: 'dashboard',
     },
-    component: Main,
+    component: MainLayout,
     children: [
       {
-        name: 'analysis',
         path: 'analysis',
+        name: 'dashboard-analysis',
         meta: {
           title: '分析页',
         },
-        component: Analysis,
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/analysis.vue'),
       },
       {
-        name: 'monitor',
         path: 'monitor',
+        name: 'dashboard-monitor',
         meta: {
           title: '监控页',
         },
-        component: Monitor,
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/monitor.vue'),
       },
       {
-        name: 'workplace',
         path: 'workplace',
+        name: 'dashboard-workplace',
         meta: {
           title: '工作台',
         },
-        component: Workplace,
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/workplace.vue'),
       },
     ],
   },
@@ -123,87 +122,34 @@ const routes: RouteConfig[] = [
       title: '表单页',
       icon: 'form',
     },
-    component: Main,
+    component: MainLayout,
     children: [
       {
-        path: 'basic-form',
+        path: 'basic',
         name: 'basic-form',
         meta: {
           title: '基础表单',
         },
-        component: BasicForm,
+        component: () => import(/* webpackChunkName: "form" */ '@/views/form/basic-form.vue'),
       },
       {
-        path: 'step-form',
+        path: 'step',
         name: 'step-form',
         meta: {
           title: '分步表单',
         },
-        component: StepForm,
+        component: () => import(/* webpackChunkName: "form" */ '@/views/form/step-form.vue'),
       },
       {
-        path: 'advanced-form',
+        path: 'advanced',
         name: 'advanced-form',
         meta: {
           title: '高级表单',
         },
-        component: AdvancedForm,
+        component: () => import(/* webpackChunkName: "form" */ '@/views/form/advanced-form.vue'),
       },
     ],
-  },
-  {
-    path: '/exception',
-    name: 'exception',
-    meta: {
-      title: '异常页',
-      icon: 'warning',
-    },
-    component: Main,
-    children: [
-      {
-        path: '403',
-        name: 'forbidden',
-        meta: {
-          title: '403',
-        },
-        component: Forbidden,
-      },
-      {
-        path: '404',
-        name: 'notfound',
-        meta: {
-          title: '404',
-        },
-        component: NotFound,
-      },
-    ],
-  },
-  {
-    path: '/login',
-    name: 'login',
-    meta: {
-      hide: true,
-    },
-    component: Login,
-  },
-  {
-    path: '/register',
-    name: 'register',
-    meta: {
-      hide: true,
-    },
-    component: Register,
-  },
-  {
-    path: '*',
-    name: '404',
-    meta: {
-      hide: true,
-    },
-    component: NotFound,
   },
 ]
 
-const constantRoutes: RouteConfig[] = []
-
-export default routes
+export { userRoutes, appRoutes, homeRoute }

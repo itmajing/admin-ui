@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import application from './modules/application'
+import permission from './modules/permission'
 
 export default new Vuex.Store({
   state: {},
@@ -11,5 +12,6 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     application,
+    permission,
   },
 })

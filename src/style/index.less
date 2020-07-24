@@ -5,3 +5,34 @@
 
 // overwrite antd color
 @import "color.less";
+
+/*全局滚动条样式*/
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  -webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  /* Webkit browsers */
+  -moz-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  /* Firefox */
+  -ms-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  /* IE9 */
+  -o-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  /* Opera(Old) */
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  /* IE9+, News */
+  background-color: rgba(0, 0, 0, 0.4);
+}

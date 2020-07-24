@@ -1,13 +1,14 @@
 import Vue from 'vue'
 
 interface LoggerOption {
-  level?: 'error' | 'warn' | 'info' | 'debug' | 'trace'
+  level?: 'error' | 'warn' | 'info' | 'debug'
 }
 
 interface LoggerObject {
-  info(msg: any): void
-  warn(msg: any): void
-  error(msg: any): void
+  debug(message?: any, ...optionalParams: any[]): void
+  info(message?: any, ...optionalParams: any[]): void
+  warn(message?: any, ...optionalParams: any[]): void
+  error(message?: any, ...optionalParams: any[]): void
 }
 
 declare module 'vue/types/vue' {
