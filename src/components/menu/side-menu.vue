@@ -73,11 +73,26 @@ export default class SideMenu extends Vue {
   openKeys: string[] = []
   selectedKeys: string[] = []
 
+  cacheOpenKeys: string[] = []
+
   @Watch('selectedKey')
   onSelectedKeyChange(key: string) {
     this.selectedKeys = key ? [key] : []
     const parentMenus = findParentMenuByName(this.menuList, key)
-    this.openKeys = parentMenus.map(menu => menu.name)
+    if (this.collapsed) {
+      this.cacheOpenKeys = parentMenus.map(menu => menu.name)
+    } else {
+      this.openKeys = parentMenus.map(menu => menu.name)
+    }
+  }
+
+  @Watch('collapsed')
+  onCollapsedChange(collapsed: string) {
+    if (!collapsed) {
+      this.openKeys = this.cacheOpenKeys
+    } else {
+      this.openKeys = []
+    }
   }
 
   handleOpenChange(openKeys: string[]) {
