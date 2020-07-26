@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="au-side-menu">
     <a-menu
       mode="inline"
       theme="light"

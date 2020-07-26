@@ -34,7 +34,7 @@ export function optimizeRoutes(routes: RouteConfig[], parent?: RouteConfig): Rou
   })
 }
 
-export function findRouteByName(routes: RouteConfig[], name: string) {
+export function findRouteByName(routes: RouteConfig[], name: string): RouteConfig {
   let result!: RouteConfig
   for (const router of routes) {
     if (name === router.name) {
@@ -92,7 +92,7 @@ export function generateMenu(routes: RouteConfig[], parent?: Menu): Menu[] {
   return menus
 }
 
-export function findMenuByName(menus: Menu[], name: string) {
+export function findMenuByName(menus: Menu[], name: string): Menu {
   let result!: Menu
   for (const menu of menus) {
     if (menu.name === name) {
@@ -111,7 +111,7 @@ export function findMenuByName(menus: Menu[], name: string) {
   return result
 }
 
-export function findTopMenuByName(menus: Menu[], name: string) {
+export function findTopMenuByName(menus: Menu[], name: string): Menu {
   let result!: Menu
   let menu = findMenuByName(menus, name)
   if (menu) {
@@ -123,7 +123,7 @@ export function findTopMenuByName(menus: Menu[], name: string) {
   return result
 }
 
-export function findParentMenuByName(menus: Menu[], name: string) {
+export function findParentMenuByName(menus: Menu[], name: string): Menu[] {
   const results = []
   let menu = findMenuByName(menus, name)
   if (menu) {
