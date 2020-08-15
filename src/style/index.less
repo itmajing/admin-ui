@@ -6,7 +6,15 @@
 // overwrite antd color
 @import "color.less";
 
-/*全局滚动条样式*/
+// overwrite antd style
+.ant-menu-submenu-popup {
+  .ant-menu-submenu-content {
+    overflow: auto;
+    max-height: 300px;
+  }
+}
+
+/*global scrollbar*/
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
