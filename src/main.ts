@@ -9,6 +9,7 @@ import Global from '@/libs/global'
 import Axios from '@/libs/axios'
 import Particles from 'vue-particles'
 import AntDesign from 'ant-design-vue'
+import AuComponents from '@/components'
 import './style/index.less'
 
 Vue.use(Logger)
@@ -18,6 +19,7 @@ Vue.use(Global)
 Vue.use(Axios)
 Vue.use(Particles)
 Vue.use(AntDesign)
+Vue.use(AuComponents)
 
 Vue.config.productionTip = false
 

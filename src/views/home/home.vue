@@ -11,7 +11,6 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class Home extends Vue {
   mounted(): void {
     console.log(this.$global)
-    this.$router.addRoutes([])
   }
 }
 </script>

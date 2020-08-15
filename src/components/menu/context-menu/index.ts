@@ -19,7 +19,6 @@ export interface Options {
   onAction?: (payload: any) => void
 }
 
-
 export interface Props {
   position: Position
   menuList: Array<Menu>
@@ -50,8 +49,8 @@ function newInstance() {
         on: {
           action: (payload: any) => {
             actionHandler(payload)
-          }
-        }
+          },
+        },
       })
     },
   })

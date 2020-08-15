@@ -91,7 +91,14 @@
         </div>
       </div>
       <div class="au-main-layout-content">
-        <router-view v-if="routerView"></router-view>
+        <div class="au-main-layout-content-body">
+          <div class="au-main-layout-content-body-wrapper">
+            <router-view v-if="routerView"></router-view>
+          </div>
+        </div>
+        <div class="au-main-layout-content-footer">
+          Copyright © 2020 C2olShare
+        </div>
       </div>
     </div>
   </div>
@@ -321,10 +328,6 @@ export default class MainLayout extends Vue {
       & > ul {
         border: none;
       }
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
     }
   }
 
@@ -398,22 +401,24 @@ export default class MainLayout extends Vue {
     .au-main-layout-content {
       height: calc(~'100% - 115px');
       margin: 5px 5px 0 10px;
-      background-color: #fff;
       overflow-x: hidden;
       overflow-y: auto;
       border-radius: 2px;
-    }
+      display: flex;
+      flex-flow: column;
 
-    .au-main-layout-footer {
-      background-color: #fff;
-      margin: 5px 10px 0 10px;
-      padding: 10px 0;
+      .au-main-layout-content-body {
+        flex: auto;
 
-      .au-main-layout-footer-copyright {
-        height: 36px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        .au-main-layout-content-body-wrapper {
+          padding: 10px 0;
+          background-color: #fff;
+        }
+      }
+
+      .au-main-layout-content-footer {
+        padding: 20px 0;
+        text-align: center;
       }
     }
   }

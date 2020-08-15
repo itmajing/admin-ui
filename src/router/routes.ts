@@ -68,7 +68,7 @@ const appRoutes: RouteConfig[] = [
         meta: {
           title: '个人中心',
         },
-        component: () => import(/* webpackChunkName: "account" */ '@/views/account/account-center.vue'),
+        component: () => import(/* webpackChunkName: "account" */ '@/views/account/center/index.vue'),
       },
       {
         name: 'account-setting',
@@ -76,7 +76,7 @@ const appRoutes: RouteConfig[] = [
         meta: {
           title: '个人设置',
         },
-        component: () => import(/* webpackChunkName: "account" */ '@/views/account/account-setting.vue'),
+        component: () => import(/* webpackChunkName: "account" */ '@/views/account/setting/index.vue'),
       },
     ],
   },

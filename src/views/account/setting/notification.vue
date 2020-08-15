@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>个人设置</div>
+    <div>Notification</div>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component
-export default class AccountSetting extends Vue {}
+export default class Notification extends Vue {}
 </script>
 
 <style lang="less" scoped></style>
