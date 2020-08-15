@@ -2,7 +2,7 @@
   <div class="au-side-menu">
     <a-menu
       mode="inline"
-      theme="light"
+      :theme="theme"
       :inlineCollapsed="collapsed"
       :openKeys="openKeys"
       :selectedKeys="selectedKeys"
@@ -65,6 +65,13 @@ const SideSubMenu = {
   },
 })
 export default class SideMenu extends Vue {
+  @Prop({
+    type: String,
+    default: () => {
+      return 'light'
+    },
+  })
+  theme!: string
   @Prop(String) selectedKey!: string
   @Prop(Boolean) readonly collapsed!: boolean
   @Prop(Boolean) readonly accordion!: boolean
