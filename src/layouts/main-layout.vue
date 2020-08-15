@@ -17,7 +17,7 @@
         ></side-menu>
       </div>
     </div>
-    <div class="au-main-layout-inside">
+    <div class="au-main-layout-inside" :class="{ 'au-main-layout-inside-collapsed': collapsed }">
       <div class="au-main-layout-header">
         <div class="au-main-layout-header-trigger" @click.stop="handleMenuFold">
           <a-icon type="menu-fold" :style="{ fontSize: '18px' }" v-if="!collapsed" />
@@ -71,7 +71,7 @@
         <div class="au-main-layout-tabs-menu">
           <a-dropdown>
             <div class="au-main-layout-tabs-menu-trigger">
-              <a-icon type="down" :style="{ fontSize: '16px' }" />
+              <a-icon type="down" :style="{ fontSize: '12px' }" />
             </div>
             <a-menu slot="overlay" @click="handleTabMenuClick">
               <a-menu-item key="close-other">
@@ -269,12 +269,10 @@ export default class MainLayout extends Vue {
 
 <style lang="less" scoped>
 @import '../style/index';
+
 .au-main-layout {
   width: 100%;
   height: 100%;
-}
-
-.au-main-layout {
   background-color: rgb(243, 245, 247);
   display: flex;
 
@@ -282,6 +280,7 @@ export default class MainLayout extends Vue {
     width: 256px;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     transition: all 0.2s ease-in-out;
     background-color: rgb(255, 255, 255);
     box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
@@ -317,11 +316,12 @@ export default class MainLayout extends Vue {
 
     .au-main-layout-menu {
       flex: 1;
-      overflow-y: scroll;
+      overflow-y: auto;
       overflow-x: hidden;
       border-top: rgba(29, 35, 41, 0.05) solid 1px;
 
-      & /deep/ .ant-menu-inline {
+      & /deep/ .ant-menu-inline,
+      & /deep/ .ant-menu-vertical {
         border: none;
       }
 
@@ -333,6 +333,7 @@ export default class MainLayout extends Vue {
 
   .au-main-layout-inside {
     flex: 1;
+    width: 0;
 
     .au-main-layout-header {
       height: 64px;
@@ -371,15 +372,28 @@ export default class MainLayout extends Vue {
       overflow: hidden;
       display: flex;
 
-      .ant-tabs {
-        width: calc(~'100% - 50px');
+      /deep/ .ant-tabs {
+        width: calc(~'100% - 38px');
+
+        .ant-tabs-nav-container-scrolling {
+          padding-left: 36px;
+          padding-right: 36px;
+        }
+
+        .ant-tabs-tab-prev,
+        .ant-tabs-tab-next {
+          background-color: #fff;
+          border: 1px solid #e8e8e8;
+
+          &:hover:not(.ant-tabs-tab-btn-disabled) {
+            color: @primary-color;
+          }
+        }
       }
 
       .au-main-layout-tabs-menu {
-        width: 50px;
+        width: 38px;
         background-color: #fff;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
         border: 1px solid #e8e8e8;
 
         .au-main-layout-tabs-menu-trigger {
@@ -389,9 +403,9 @@ export default class MainLayout extends Vue {
           display: flex;
           justify-content: center;
           align-items: center;
-          color: rgba(0, 0, 0, 0.45);
+          color: rgba(0, 0, 0, 0.25);
 
-          &:hover {
+          &.ant-dropdown-open {
             color: @primary-color;
           }
         }
