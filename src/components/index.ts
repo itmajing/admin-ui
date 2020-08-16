@@ -1,8 +1,10 @@
 import _Vue, { PluginObject } from 'vue'
-import AIconfont from './icon/index'
+import AuIconfont from './icon/index'
+import AuToolkit from './toolkit/toolkit.vue'
 
 const components: any = {
-  AIconfont,
+  AuIconfont,
+  AuToolkit,
 }
 
 const AuComponents: PluginObject<any> = {
