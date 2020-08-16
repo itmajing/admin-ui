@@ -18,6 +18,7 @@ class AuLogger implements LoggerObject {
     }
   }
 
+  /* eslint-disable no-console */
   debug(message?: any, ...optionalParams: any[]): void {
     if (this.value === LOG_LEVEL.debug) {
       console.info(message, optionalParams)
@@ -41,6 +42,7 @@ class AuLogger implements LoggerObject {
       console.error(message, optionalParams)
     }
   }
+  /* eslint-enable no-console */
 }
 
 export { AuLogger }

@@ -1,5 +1,9 @@
 # Admin UI
 
+## Preview
+[preview.adminui.itmajing.com](https://preview.adminui.itmajing.com)  
+admin/123456
+
 ## Project setup
 ```
 npm install
