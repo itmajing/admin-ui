@@ -37,8 +37,9 @@
             <a-col v-bind="gridProps[model]">
               <a-form-model-item label="租户状态">
                 <a-select v-model="queryParam.status" allowClear>
-                  <a-select-option :value="0">生效</a-select-option>
-                  <a-select-option :value="1">失效</a-select-option>
+                  <a-select-option v-for="key in Object.keys(statusMap)" :value="key" :key="key">
+                    {{ statusMap[key].label }}
+                  </a-select-option>
                 </a-select>
               </a-form-model-item>
             </a-col>
@@ -75,6 +76,11 @@
             :row-selection="{ selectedRowKeys: tableSelectedKeys, onChange: handleTableRowSelect }"
             rowKey="id"
           >
+            <span slot="status" slot-scope="text">
+              <a-tag :color="statusMap[text].color">
+                {{ statusMap[text].label }}
+              </a-tag>
+            </span>
             <span slot="createTime" slot-scope="text">{{ text | timestamp }}</span>
             <span slot="updateTime" slot-scope="text">{{ text | timestamp }}</span>
           </a-table>
@@ -137,6 +143,7 @@ export default class TableList extends Vue {
     {
       title: '租户状态',
       dataIndex: 'status',
+      scopedSlots: { customRender: 'status' },
     },
     {
       title: '描述信息',
@@ -160,7 +167,7 @@ export default class TableList extends Vue {
       name: 'example',
       account: 'example',
       domain: 'example',
-      status: 0,
+      status: 1,
       description: '',
       createTime: 1597574491390,
       updateTime: 1597574491390,
@@ -210,7 +217,7 @@ export default class TableList extends Vue {
       name: 'example',
       account: 'example',
       domain: 'example',
-      status: 0,
+      status: 1,
       description: '',
       createTime: 1597574491390,
       updateTime: 1597574491390,
@@ -257,6 +264,17 @@ export default class TableList extends Vue {
     },
   ]
   tableSelectedKeys: Array<string> = []
+
+  statusMap = {
+    0: {
+      color: 'orange',
+      label: '失效',
+    },
+    1: {
+      color: 'green',
+      label: '生效',
+    },
+  }
 
   get collapsedIcon() {
     if (this.model === 'vertical') {
