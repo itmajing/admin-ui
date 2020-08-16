@@ -403,7 +403,7 @@ export default class MainLayout extends Vue {
           display: flex;
           justify-content: center;
           align-items: center;
-          color: rgba(0, 0, 0, 0.25);
+          color: rgba(0, 0, 0, 0.45);
 
           &.ant-dropdown-open {
             color: @primary-color;
@@ -425,7 +425,7 @@ export default class MainLayout extends Vue {
         flex: auto;
 
         .au-main-layout-content-body-wrapper {
-          padding: 10px 0;
+          padding: 10px;
           background-color: #fff;
         }
       }

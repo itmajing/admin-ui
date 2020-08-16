@@ -150,6 +150,25 @@ const appRoutes: RouteConfig[] = [
       },
     ],
   },
+  {
+    path: '/list',
+    name: 'list',
+    meta: {
+      title: '列表页',
+      icon: 'table',
+    },
+    component: MainLayout,
+    children: [
+      {
+        path: 'table',
+        name: 'table-list',
+        meta: {
+          title: '查询表格',
+        },
+        component: () => import(/* webpackChunkName: "list" */ '@/views/list/table-list.vue'),
+      },
+    ],
+  },
 ]
 
 export { userRoutes, appRoutes, homeRoute }
