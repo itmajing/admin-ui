@@ -1,7 +1,7 @@
 # Admin UI
 
 ## Preview
-[preview.adminui.itmajing.com](https://preview.adminui.itmajing.com)  
+[adminui.itmajing.com](https://adminui.itmajing.com)  
 admin/123456
 
 ## Project setup
