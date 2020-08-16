@@ -5,7 +5,7 @@
         <a-list-item slot="renderItem" slot-scope="item, index" :key="index">
           <a-list-item-meta>
             <div slot="title">
-              <a-iconfont :type="item.icon"></a-iconfont>
+              <au-iconfont :type="item.icon"></au-iconfont>
               <span style="padding-left: 5px">{{ item.title }}</span>
             </div>
             <span slot="description">
