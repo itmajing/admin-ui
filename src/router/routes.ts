@@ -170,6 +170,41 @@ const appRoutes: RouteConfig[] = [
       },
     ],
   },
+  {
+    path: '/iframe',
+    name: 'iframe',
+    meta: {
+      title: '内嵌页面',
+      icon: 'table',
+    },
+    component: MainLayout,
+    children: [
+      {
+        path: 'antdv',
+        name: 'iframe-antdv',
+        meta: {
+          title: 'AntDesign',
+          footer: false,
+        },
+        props: {
+          iframe: 'https://www.antdv.com',
+        },
+        component: () => import(/* webpackChunkName: "frame" */ '@/views/frame/index.vue'),
+      },
+      {
+        path: 'bilibili',
+        name: 'iframe-bilibili',
+        meta: {
+          title: '哔哩哔哩',
+          footer: false,
+        },
+        props: {
+          iframe: 'https://www.bilibili.com',
+        },
+        component: () => import(/* webpackChunkName: "frame" */ '@/views/frame/index.vue'),
+      },
+    ],
+  },
 ]
 
 export { userRoutes, appRoutes, homeRoute }
