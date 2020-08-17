@@ -21,25 +21,25 @@ class AuLogger implements LoggerObject {
   /* eslint-disable no-console */
   debug(message?: any, ...optionalParams: any[]): void {
     if (this.value === LOG_LEVEL.debug) {
-      console.info(message, optionalParams)
+      console.info(message, ...optionalParams)
     }
   }
 
   info(message?: any, ...optionalParams: any[]): void {
     if (this.value <= LOG_LEVEL.info) {
-      console.info(message, optionalParams)
+      console.info(message, ...optionalParams)
     }
   }
 
   warn(message?: any, ...optionalParams: any[]): void {
     if (this.value <= LOG_LEVEL.warn) {
-      console.warn(message, optionalParams)
+      console.warn(message, ...optionalParams)
     }
   }
 
   error(message?: any, ...optionalParams: any[]): void {
     if (this.value <= LOG_LEVEL.error) {
-      console.error(message, optionalParams)
+      console.error(message, ...optionalParams)
     }
   }
   /* eslint-enable no-console */
