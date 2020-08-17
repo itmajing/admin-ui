@@ -1,5 +1,5 @@
 import { RouteConfig } from 'vue-router'
-import { MainLayout, UserLayout } from '@/layouts'
+import { BlankLayout, MainLayout, UserLayout } from '@/layouts'
 
 const userRoutes: RouteConfig[] = [
   {
@@ -16,6 +16,30 @@ const userRoutes: RouteConfig[] = [
         path: 'register',
         name: 'register',
         component: () => import(/* webpackChunkName: "user" */ '@/views/user/register.vue'),
+      },
+    ],
+  },
+]
+
+const errorRoutes: RouteConfig[] = [
+  {
+    path: '/exception',
+    component: BlankLayout,
+    children: [
+      {
+        path: '403',
+        name: 'forbidden',
+        component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/forbidden.vue'),
+      },
+      {
+        path: '404',
+        name: 'notfound',
+        component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/notfound.vue'),
+      },
+      {
+        path: '500',
+        name: 'internal-error',
+        component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/internal-error.vue'),
       },
     ],
   },
@@ -205,6 +229,14 @@ const appRoutes: RouteConfig[] = [
       },
     ],
   },
+  {
+    path: '*',
+    name: 'wildcard',
+    redirect: { name: 'notfound' },
+    meta: {
+      hidden: true,
+    },
+  },
 ]
 
-export { userRoutes, appRoutes, homeRoute }
+export { userRoutes, errorRoutes, appRoutes, homeRoute }
