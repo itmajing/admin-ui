@@ -29,6 +29,7 @@ const userRoutes: RouteConfig[] = [
  *  permission {array}: 权限列表
  *  target {_view|_blank|_self}: 文档打开位置
  *  closable {boolean}: 是否允许关闭标签，默认值：true
+ *  footer {boolean}: 是否显示页脚，默认值：true
  */
 /**
  * 首页路由

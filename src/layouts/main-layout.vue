@@ -96,7 +96,7 @@
             <router-view v-if="routerView"></router-view>
           </div>
         </div>
-        <div class="au-main-layout-content-footer">
+        <div class="au-main-layout-content-footer" v-if="showFooter">
           Copyright © 2020 C2olShare
         </div>
       </div>
@@ -162,6 +162,11 @@ export default class MainLayout extends Vue {
         })
       }
     }
+  }
+
+  get showFooter() {
+    const { footer = true } = this.$route.meta || {}
+    return footer
   }
 
   /**
