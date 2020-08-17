@@ -189,7 +189,7 @@ const appRoutes: RouteConfig[] = [
         props: {
           iframe: 'https://www.antdv.com',
         },
-        component: () => import(/* webpackChunkName: "frame" */ '@/views/frame/index.vue'),
+        component: () => import(/* webpackChunkName: "frame" */ '@/views/iframe/index.vue'),
       },
       {
         path: 'bilibili',
@@ -201,7 +201,7 @@ const appRoutes: RouteConfig[] = [
         props: {
           iframe: 'https://www.bilibili.com',
         },
-        component: () => import(/* webpackChunkName: "frame" */ '@/views/frame/index.vue'),
+        component: () => import(/* webpackChunkName: "frame" */ '@/views/iframe/index.vue'),
       },
     ],
   },
