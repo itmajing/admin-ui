@@ -90,13 +90,13 @@
           </a-dropdown>
         </div>
       </div>
-      <div class="au-main-layout-content">
-        <div class="au-main-layout-content-body">
-          <div class="au-main-layout-content-body-wrapper">
+      <div class="au-main-layout-content" ref="content">
+        <div class="au-main-layout-content-body" ref="body">
+          <div class="au-main-layout-content-body-wrapper" ref="wrapper">
             <router-view v-if="routerView"></router-view>
           </div>
         </div>
-        <div class="au-main-layout-content-footer" v-if="showFooter">
+        <div class="au-main-layout-content-footer" ref="footer" v-if="showFooter">
           Copyright © 2020 C2olShare
         </div>
       </div>
@@ -110,6 +110,7 @@ import SideMenu from '@/components/menu/side-menu.vue'
 import { Action, Getter } from 'vuex-class'
 import { findMenuByName, Menu } from '@/router/utils'
 import { MultiOptions, MultiTab } from '@/store/modules/application'
+import * as lodash from 'lodash'
 
 @Component({
   name: 'MainLayout',
@@ -118,9 +119,16 @@ import { MultiOptions, MultiTab } from '@/store/modules/application'
   },
 })
 export default class MainLayout extends Vue {
+  $refs!: {
+    content: HTMLElement
+    body: HTMLElement
+    wrapper: HTMLElement
+    footer: HTMLElement
+  }
   cachedTitle = ''
   collapsed = false
   routerView = true
+  windowResizeHandler!: () => void
 
   @Getter('accessedMenus') accessedMenus!: Menu[]
   @Getter('openedMultiTabs') openedMultiTabs!: MultiTab[]
@@ -131,6 +139,7 @@ export default class MainLayout extends Vue {
   @Action('removeAllMultiTab') removeAllMultiTab!: Function
   @Action('removeOtherMultiTab') removeOtherMultiTab!: Function
   @Action('activateMultiTab') activateMultiTab!: Function
+  @Action('updateContainerHeight') updateContainerHeight!: Function
   @Action('userLogout') userLogout!: () => Promise<any>
 
   @Provide('handleOpenMultiTab') handleOpenMultiTabFunction = this.handleOpenMultiTab
@@ -261,13 +270,40 @@ export default class MainLayout extends Vue {
     this.removeMultiTab(digest)
   }
 
+  calcMainLayoutContainerHeight() {
+    const content = this.$refs.content
+    const contentHeight = content.clientHeight
+
+    const footer = this.$refs.footer
+    const footerHeight = footer ? footer.clientHeight : 0
+
+    const wrapper = this.$refs.wrapper
+    const wrapperPaddingTop = parseFloat(window.getComputedStyle(wrapper, null).paddingTop)
+    const wrapperPaddingBottom = parseFloat(window.getComputedStyle(wrapper, null).paddingBottom)
+    const wrapperPadding = wrapperPaddingTop + wrapperPaddingBottom
+
+    // minus 1 px to avoid accuracy problems
+    return contentHeight - footerHeight - wrapperPadding - 1
+  }
+
+  handleWindowResize() {
+    const containerHeight = this.calcMainLayoutContainerHeight()
+    this.updateContainerHeight(containerHeight)
+  }
+
   mounted(): void {
     this.$logger.info(window.navigator.userAgent)
     this.initMultiTabs(this.$route)
+
+    // handle windows resize event
+    this.handleWindowResize()
+    this.windowResizeHandler = lodash.debounce(this.handleWindowResize, 150)
+    window.addEventListener('resize', this.windowResizeHandler)
   }
 
   beforeDestroy(): void {
     document.title = this.cachedTitle
+    window.removeEventListener('resize', this.windowResizeHandler)
   }
 }
 </script>

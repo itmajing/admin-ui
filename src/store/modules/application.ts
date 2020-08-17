@@ -123,6 +123,7 @@ function injectMultiTabDigest(multiTab: MultiTab) {
 interface State {
   openedMultiTabs: MultiTab[]
   activeMultiTab?: MultiTab
+  containerHeight: number
 }
 
 interface StoreMultiTabs {
@@ -136,6 +137,7 @@ const application: Module<State, any> = {
   state: {
     openedMultiTabs: [],
     activeMultiTab: undefined,
+    containerHeight: 0,
   },
   mutations: {
     setInitMultiTabs(state: State, storeMultiTabs: StoreMultiTabs) {
@@ -217,6 +219,9 @@ const application: Module<State, any> = {
         openedMultiTabs: state.openedMultiTabs,
       })
     },
+    setContainerHeight(state: State, height: number) {
+      state.containerHeight = height
+    },
   },
   actions: {
     initMultiTabs({ commit }, route: Route) {
@@ -272,6 +277,12 @@ const application: Module<State, any> = {
         resolve()
       })
     },
+    updateContainerHeight({ commit }, height: number) {
+      return new Promise(resolve => {
+        commit('setContainerHeight', height)
+        resolve()
+      })
+    },
   },
   getters: {
     openedMultiTabs(state: State) {
@@ -279,6 +290,9 @@ const application: Module<State, any> = {
     },
     activeMultiTab(state: State) {
       return state.activeMultiTab
+    },
+    containerHeight(state: State) {
+      return state.containerHeight
     },
   },
 }
