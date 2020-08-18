@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter, { Route } from 'vue-router'
 import store from '@/store/index'
 import { notification } from 'ant-design-vue'
-import { userRoutes, errorRoutes } from './routes'
+import { userRoutes } from './routes'
 import { AuUtils } from '@/libs/utils'
 import { AUTH_HEADER } from '@/constant'
 
@@ -11,7 +11,7 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [...userRoutes, ...errorRoutes],
+  routes: [...userRoutes],
 })
 
 const loginRoute = 'login'

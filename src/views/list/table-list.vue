@@ -16,27 +16,27 @@
           <a-row :gutter="16">
             <a-col v-bind="gridProps[model]">
               <a-form-model-item label="租户编码">
-                <a-input v-model="queryParam.id" allowClear />
+                <a-input v-model="queryParam.id" allowClear placeholder="请输入租户编码" />
               </a-form-model-item>
             </a-col>
             <a-col v-bind="gridProps[model]">
               <a-form-model-item label="租户名称">
-                <a-input v-model="queryParam.name" allowClear />
+                <a-input v-model="queryParam.name" allowClear placeholder="请输入租户名称" />
               </a-form-model-item>
             </a-col>
             <a-col v-bind="gridProps[model]">
               <a-form-model-item label="租户账号">
-                <a-input v-model="queryParam.account" allowClear />
+                <a-input v-model="queryParam.account" allowClear placeholder="请输入租户账号" />
               </a-form-model-item>
             </a-col>
             <a-col v-bind="gridProps[model]">
               <a-form-model-item label="租户域名">
-                <a-input v-model="queryParam.domain" allowClear />
+                <a-input v-model="queryParam.domain" allowClear placeholder="请输入租户域名" />
               </a-form-model-item>
             </a-col>
             <a-col v-bind="gridProps[model]">
               <a-form-model-item label="租户状态">
-                <a-select v-model="queryParam.status" allowClear>
+                <a-select v-model="queryParam.status" allowClear placeholder="请选择租户状态">
                   <a-select-option v-for="key in Object.keys(statusMap)" :value="key" :key="key">
                     {{ statusMap[key].label }}
                   </a-select-option>
@@ -119,7 +119,7 @@ export default class TableList extends Vue {
     name: '',
     account: '',
     domain: '',
-    status: '',
+    status: undefined,
   }
 
   tableColumns = [
@@ -391,7 +391,7 @@ export default class TableList extends Vue {
 
       .search-collapsed {
         bottom: -10px;
-        left: 50%;
+        left: calc(~'50% - 7px');
       }
     }
 
@@ -420,7 +420,7 @@ export default class TableList extends Vue {
 
       .search-collapsed {
         right: -8px;
-        top: 50%;
+        top: calc(~'50% - 10px');
       }
     }
 
