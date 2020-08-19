@@ -1,97 +1,87 @@
 <template>
   <div class="au-page-card-list">
-    <div class="card-list-search" :class="{ 'card-list-search-collapsed': collapsed }">
-      <a-form-model class="search-form">
-        <a-row :gutter="16">
-          <a-col v-bind="formGridPros">
-            <a-form-model-item label="操作系统">
-              <a-select v-model="queryParam.os" allowClear placeholder="请选择操作系统">
-                <a-select-option v-for="key in Object.keys(osMap)" :value="key" :key="key">
-                  <au-iconfont :type="osMap[key].icon" />
-                  <span style="margin-left: 5px">{{ osMap[key].label }}</span>
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
+    <au-elastic-panel :transformative="false">
+      <template #form>
+        <a-form-model class="search-form">
+          <a-row :gutter="16">
+            <a-col v-bind="formGridPros">
+              <a-form-model-item label="操作系统">
+                <a-select v-model="queryParam.os" allowClear placeholder="请选择操作系统">
+                  <a-select-option v-for="key in Object.keys(osMap)" :value="key" :key="key">
+                    <au-iconfont :type="osMap[key].icon" />
+                    <span style="margin-left: 5px">{{ osMap[key].label }}</span>
+                  </a-select-option>
+                </a-select>
+              </a-form-model-item>
+            </a-col>
+            <a-col v-bind="formGridPros">
+              <a-form-model-item label="运行状态">
+                <a-select v-model="queryParam.status" allowClear placeholder="请选择运行状态">
+                  <a-select-option v-for="key in Object.keys(statusMap)" :value="key" :key="key">
+                    <a-badge :status="statusMap[key].status" :text="statusMap[key].label" />
+                  </a-select-option>
+                </a-select>
+              </a-form-model-item>
+            </a-col>
+            <a-col v-bind="formGridPros" style="text-align: right; float: right">
+              <a-form-model-item>
+                <a-button type="primary">查询</a-button>
+                <a-button style="margin-left: 8px">重置</a-button>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+        </a-form-model>
+      </template>
+      <template #data>
+        <a-row :gutter="[16, 16]">
+          <a-col v-bind="cardGridProps" class="card-wrapper">
+            <a-card :hoverable="true" :bodyStyle="{ padding: '0' }" style="{ border-style: dashed }">
+              <div class="card-content card-content-add">
+                <a-icon type="plus" :style="{ fontSize: '26px' }" />
+              </div>
+            </a-card>
           </a-col>
-          <a-col v-bind="formGridPros">
-            <a-form-model-item label="运行状态">
-              <a-select v-model="queryParam.status" allowClear placeholder="请选择运行状态">
-                <a-select-option v-for="key in Object.keys(statusMap)" :value="key" :key="key">
-                  <a-badge :status="statusMap[key].status" :text="statusMap[key].label" />
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col v-bind="formGridPros" style="text-align: right; float: right">
-            <a-form-model-item>
-              <a-button type="primary">查询</a-button>
-              <a-button style="margin-left: 8px">重置</a-button>
-            </a-form-model-item>
-          </a-col>
-        </a-row>
-      </a-form-model>
-      <div
-        class="search-collapsed"
-        title="点击展开或收起"
-        @click="
-          () => {
-            collapsed = !collapsed
-          }
-        "
-      >
-        <au-iconfont :type="collapsed ? 'double-bottom' : 'double-top'"></au-iconfont>
-      </div>
-    </div>
-    <div class="card-list-content">
-      <a-row :gutter="[16, 16]">
-        <a-col v-bind="cardGridProps" class="card-wrapper">
-          <a-card :hoverable="true" :bodyStyle="{ padding: '0' }" style="{ border-style: dashed }">
-            <div class="card-content card-content-add">
-              <a-icon type="plus" :style="{ fontSize: '26px' }" />
-            </div>
-          </a-card>
-        </a-col>
-        <a-col v-bind="cardGridProps" v-for="item in cardData" :key="item.id">
-          <a-card :hoverable="true" :bodyStyle="{ padding: '0' }">
-            <div class="card-content">
-              <!--temp code-->
-              <div style="display: flex; flex-flow: column; padding: 10px; height: 100%">
-                <div style="height: 30px; flex-shrink: 0; display: flex; align-items: center">
-                  <div style="flex: auto; display: flex; align-items: center">
-                    <au-iconfont :type="osMap[item.os].icon" :style="{ fontSize: '20px' }" />
-                    <span style="margin-left: 8px">{{ osMap[item.os].label }}</span>
-                    <span style="margin-left: 5px">{{ item.version }}</span>
+          <a-col v-bind="cardGridProps" v-for="item in cardData" :key="item.id">
+            <a-card :hoverable="true" :bodyStyle="{ padding: '0' }">
+              <div class="card-content">
+                <!--temp code-->
+                <div style="display: flex; flex-flow: column; padding: 10px; height: 100%">
+                  <div style="height: 30px; flex-shrink: 0; display: flex; align-items: center">
+                    <div style="flex: auto; display: flex; align-items: center">
+                      <au-iconfont :type="osMap[item.os].icon" :style="{ fontSize: '20px' }" />
+                      <span style="margin-left: 8px">{{ osMap[item.os].label }}</span>
+                      <span style="margin-left: 5px">{{ item.version }}</span>
+                    </div>
+                    <div style="flex-shrink: 0; display: flex; align-items: center">
+                      <au-iconfont type="remote-desktop" />
+                      <au-iconfont type="shutdown" style="margin-left: 8px" />
+                      <au-iconfont type="manage" style="margin-left: 8px" />
+                    </div>
                   </div>
-                  <div style="flex-shrink: 0; display: flex; align-items: center">
-                    <au-iconfont type="remote-desktop" />
-                    <au-iconfont type="shutdown" style="margin-left: 8px" />
-                    <au-iconfont type="manage" style="margin-left: 8px" />
+                  <div style="flex: auto; margin: 10px 0">
+                    {{ item.info }}
                   </div>
-                </div>
-                <div style="flex: auto; margin: 10px 0">
-                  {{ item.info }}
-                </div>
-                <div style="height: 30px; display: flex; flex-shrink: 0">
-                  <div style="flex: auto">
-                    <a-badge :status="statusMap[item.status].status" :text="statusMap[item.status].label" />
+                  <div style="height: 30px; display: flex; flex-shrink: 0">
+                    <div style="flex: auto">
+                      <a-badge :status="statusMap[item.status].status" :text="statusMap[item.status].label" />
+                    </div>
+                    <span>{{ item.ip }}</span>
                   </div>
-                  <span>{{ item.ip }}</span>
                 </div>
               </div>
-            </div>
-          </a-card>
-        </a-col>
-      </a-row>
-    </div>
+            </a-card>
+          </a-col>
+        </a-row>
+      </template>
+    </au-elastic-panel>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 
-@Component({})
+@Component
 export default class CardList extends Vue {
-  collapsed = false
   formGridPros = {
     sm: 24,
     md: 12,
@@ -238,69 +228,38 @@ export default class CardList extends Vue {
 .au-page-card-list {
   width: 100%;
 
-  .card-list-search {
-    margin: 0 8px;
-    border-bottom: 1px solid #e8e8e8;
-    position: relative;
-
-    &-collapsed {
-      height: 0;
-      transition: all 0.3s;
-
-      .search-form {
-        display: none;
-      }
-    }
-
-    .search-collapsed {
-      position: absolute;
-      cursor: pointer;
-      color: rgba(0, 0, 0, 0.35);
-      bottom: -10px;
-      left: calc(~'50% - 7px');
-
-      &:hover {
-        color: @primary-color;
-      }
+  .card-wrapper {
+    /deep/ .ant-card-bordered {
+      border-style: dashed;
     }
   }
 
-  .card-list-content {
-    margin-top: 10px;
+  .card-content {
+    height: 170px;
+    overflow: hidden;
 
-    .card-wrapper {
-      /deep/ .ant-card-bordered {
-        border-style: dashed;
-      }
+    img {
+      width: 100%;
     }
 
-    .card-content {
-      height: 170px;
-      overflow: hidden;
+    &::before {
+      content: '';
+      height: 6px;
+      display: block;
+      transition: background-color 0.2s;
+    }
+    &:hover::before {
+      background-color: @primary-color;
+    }
 
-      img {
-        width: 100%;
-      }
+    &-add {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: @text-color-secondary;
 
       &::before {
-        content: '';
-        height: 6px;
-        display: block;
-        transition: background-color 0.2s;
-      }
-      &:hover::before {
-        background-color: @primary-color;
-      }
-
-      &-add {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: @text-color-secondary;
-
-        &::before {
-          height: 0;
-        }
+        height: 0;
       }
     }
   }

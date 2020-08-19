@@ -1,40 +1,30 @@
 <template>
   <div class="au-page-table-list">
-    <au-toolkit
-      class="table-list-trigger"
-      init-position="right"
-      direction="vertical"
-      @onclick="handleModelTriggerClick"
-      title="拖拽调整位置，点击切换视图"
-    >
-      <au-iconfont v-if="model === 'vertical'" type="vertical" :style="{ fontSize: '20px' }"></au-iconfont>
-      <au-iconfont v-else type="horizontal" :style="{ fontSize: '20px' }"></au-iconfont>
-    </au-toolkit>
-    <div class="table-list-wrapper" :class="`table-list-${model}`">
-      <div class="table-list-search" :class="{ 'table-list-search-collapsed': collapsed }">
-        <a-form-model class="search-form" label-width="120px">
+    <au-elastic-panel :transformative="true" :transformed.sync="transformed" placement="left">
+      <template #form>
+        <a-form-model>
           <a-row :gutter="16">
-            <a-col v-bind="gridProps[model]">
+            <a-col v-bind="formGridProps">
               <a-form-model-item label="租户编码">
                 <a-input v-model="queryParam.id" allowClear placeholder="请输入租户编码" />
               </a-form-model-item>
             </a-col>
-            <a-col v-bind="gridProps[model]">
+            <a-col v-bind="formGridProps">
               <a-form-model-item label="租户名称">
                 <a-input v-model="queryParam.name" allowClear placeholder="请输入租户名称" />
               </a-form-model-item>
             </a-col>
-            <a-col v-bind="gridProps[model]">
+            <a-col v-bind="formGridProps">
               <a-form-model-item label="租户账号">
                 <a-input v-model="queryParam.account" allowClear placeholder="请输入租户账号" />
               </a-form-model-item>
             </a-col>
-            <a-col v-bind="gridProps[model]">
+            <a-col v-bind="formGridProps">
               <a-form-model-item label="租户域名">
                 <a-input v-model="queryParam.domain" allowClear placeholder="请输入租户域名" />
               </a-form-model-item>
             </a-col>
-            <a-col v-bind="gridProps[model]">
+            <a-col v-bind="formGridProps">
               <a-form-model-item label="租户状态">
                 <a-select v-model="queryParam.status" allowClear placeholder="请选择租户状态">
                   <a-select-option v-for="key in Object.keys(statusMap)" :value="key" :key="key">
@@ -43,7 +33,7 @@
                 </a-select>
               </a-form-model-item>
             </a-col>
-            <a-col v-bind="gridProps[model]" style="text-align: right; float: right">
+            <a-col v-bind="formGridProps" style="text-align: right; float: right">
               <a-form-model-item>
                 <a-button type="primary">查询</a-button>
                 <a-button style="margin-left: 8px">重置</a-button>
@@ -51,12 +41,9 @@
             </a-col>
           </a-row>
         </a-form-model>
-        <div class="search-collapsed" title="点击展开或收起" @click="handleCollapsedTriggerClick">
-          <au-iconfont :type="collapsedIcon"></au-iconfont>
-        </div>
-      </div>
-      <div class="table-list-content">
-        <div class="content-action">
+      </template>
+      <template #data>
+        <div class="data-action">
           <div class="content-action-base">
             <a-button type="primary">新增</a-button>
             <a-button :disabled="tableSelectedKeys.length !== 1">编辑</a-button>
@@ -68,7 +55,7 @@
             </a-button>
           </div>
         </div>
-        <div class="content-table">
+        <div class="data-table">
           <a-table
             :columns="tableColumns"
             :data-source="tableData"
@@ -85,11 +72,11 @@
             <span slot="updateTime" slot-scope="text">{{ text | timestamp }}</span>
           </a-table>
         </div>
-        <div class="content-pagination">
+        <div class="data-pagination">
           <a-pagination show-quick-jumper show-size-changer :total="100" />
         </div>
-      </div>
-    </div>
+      </template>
+    </au-elastic-panel>
   </div>
 </template>
 
@@ -98,22 +85,17 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class TableList extends Vue {
-  $refs!: { modelTrigger: HTMLFormElement }
-  model = 'vertical'
-  collapsed = false
-  gridProps = {
-    vertical: {
-      sm: 24,
-      md: 12,
-      lg: 8,
-      xl: 6,
-      xxl: 4,
+  transformed = false
+  statusMap = {
+    0: {
+      color: 'orange',
+      label: '失效',
     },
-    horizontal: {
-      span: 24,
+    1: {
+      color: 'green',
+      label: '生效',
     },
   }
-
   queryParam = {
     id: '',
     name: '',
@@ -121,7 +103,6 @@ export default class TableList extends Vue {
     domain: '',
     status: undefined,
   }
-
   tableColumns = [
     {
       title: '租户编码',
@@ -265,35 +246,20 @@ export default class TableList extends Vue {
   ]
   tableSelectedKeys: Array<string> = []
 
-  statusMap = {
-    0: {
-      color: 'orange',
-      label: '失效',
-    },
-    1: {
-      color: 'green',
-      label: '生效',
-    },
-  }
-
-  get collapsedIcon() {
-    if (this.model === 'vertical') {
-      return this.collapsed ? 'double-bottom' : 'double-top'
+  get formGridProps() {
+    if (this.transformed) {
+      return {
+        span: 24,
+      }
     } else {
-      return this.collapsed ? 'double-right' : 'double-left'
+      return {
+        sm: 24,
+        md: 12,
+        lg: 8,
+        xl: 6,
+        xxl: 4,
+      }
     }
-  }
-
-  handleModelTriggerClick() {
-    if (this.model === 'vertical') {
-      this.model = 'horizontal'
-    } else {
-      this.model = 'vertical'
-    }
-  }
-
-  handleCollapsedTriggerClick() {
-    this.collapsed = !this.collapsed
   }
 
   handleTableRowSelect(selectedRowKeys: Array<string>) {
@@ -308,125 +274,32 @@ export default class TableList extends Vue {
 .au-page-table-list {
   width: 100%;
 
-  .table-list-trigger {
-    height: 36px;
-    width: 36px;
-    border-radius: 50%;
-    box-shadow: rgba(29, 35, 41, 0.05) 0 1px 4px 0;
-    color: rgb(255, 255, 255);
-    background-color: @primary-color;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .table-list-wrapper {
+  .data-action {
+    margin-bottom: 10px;
     display: flex;
 
-    .table-list-search {
-      flex-shrink: 0;
-      position: relative;
-
-      .search-collapsed {
-        position: absolute;
-        cursor: pointer;
-        color: rgba(0, 0, 0, 0.35);
-
-        &:hover {
-          color: @primary-color;
-        }
-      }
-    }
-
-    .table-list-content {
+    .content-action-base {
       flex: 1;
-      display: flex;
-      flex-flow: column;
+      width: 0;
+    }
 
-      .content-action {
-        margin-bottom: 10px;
-        display: flex;
+    .content-action-extra {
+      flex-shrink: 0;
+    }
 
-        .content-action-base {
-          flex: 1;
-          width: 0;
-        }
-
-        .content-action-extra {
-          flex-shrink: 0;
-        }
-
-        /deep/ .ant-btn {
-          margin-right: 6px;
-        }
-      }
-
-      .content-table {
-        flex: auto;
-        margin-bottom: 10px;
-      }
-
-      .content-pagination {
-        margin-bottom: 15px;
-        text-align: right;
-      }
+    /deep/ .ant-btn {
+      margin-right: 6px;
     }
   }
 
-  .table-list-vertical {
-    flex-flow: column;
-
-    .table-list-search {
-      margin: 0 8px;
-      border-bottom: 1px solid #e8e8e8;
-
-      &-collapsed {
-        height: 0;
-        transition: all 0.3s;
-
-        .search-form {
-          display: none;
-        }
-      }
-
-      .search-collapsed {
-        bottom: -10px;
-        left: calc(~'50% - 7px');
-      }
-    }
-
-    .table-list-content {
-      margin-top: 10px;
-    }
+  .data-table {
+    flex: auto;
+    margin-bottom: 10px;
   }
 
-  .table-list-horizontal {
-    flex-flow: row;
-
-    .table-list-search {
-      width: 500px;
-      padding: 0 16px 0 6px;
-      border-right: 1px solid #e8e8e8;
-      transition: all 0.3s;
-
-      &-collapsed {
-        width: 0;
-        padding: 0 0 0 6px;
-
-        .search-form {
-          overflow: hidden;
-        }
-      }
-
-      .search-collapsed {
-        right: -8px;
-        top: calc(~'50% - 10px');
-      }
-    }
-
-    .table-list-content {
-      margin-left: 10px;
-    }
+  .data-pagination {
+    margin-bottom: 15px;
+    text-align: right;
   }
 }
 
