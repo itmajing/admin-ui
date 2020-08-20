@@ -192,10 +192,13 @@ export default class ElasticPanel extends Vue {
 
     .au-elastic-panel-search {
       //margin: 0 8px;
+      min-height: 30px;
+      transition: all 0.3s;
       border-bottom: 1px solid #e8e8e8;
 
       &-collapsed {
         height: 0;
+        min-height: 0;
         transition: all 0.3s;
 
         .search-content {
@@ -204,8 +207,10 @@ export default class ElasticPanel extends Vue {
       }
 
       .search-collapsed {
+        width: 100%;
         bottom: -10px;
-        left: calc(~'50% - 7px');
+        left: 0;
+        text-align: center;
       }
     }
 
@@ -221,28 +226,37 @@ export default class ElasticPanel extends Vue {
       width: 20%;
       min-width: 300px;
       max-width: 500px;
-      padding: 0 16px 0 6px;
-      transition: all 0.3s;
-      border-right: 1px solid #e8e8e8;
-
-      .search-collapsed {
-        right: -8px;
-        top: calc(~'50% - 10px');
-      }
-
-      &-collapsed {
-        width: 0;
-        min-width: 0;
-        padding: 0 0 0 6px;
-
-        .search-content {
-          overflow: hidden;
-        }
-      }
     }
 
     .au-elastic-panel-content {
       margin: 0 10px;
+    }
+
+    &.au-elastic-panel-left {
+      .au-elastic-panel-search {
+        padding: 0 16px 0 6px;
+        transition: all 0.3s;
+        border-right: 1px solid #e8e8e8;
+
+        .search-collapsed {
+          right: -8px;
+          top: 0;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        &-collapsed {
+          width: 0;
+          min-width: 0;
+          padding: 0 0 0 6px;
+
+          .search-content {
+            overflow: hidden;
+          }
+        }
+      }
     }
 
     &.au-elastic-panel-right {
@@ -251,12 +265,15 @@ export default class ElasticPanel extends Vue {
       .au-elastic-panel-search {
         padding: 0 6px 0 16px;
         transition: all 0.3s;
-        border-right: none;
         border-left: 1px solid #e8e8e8;
 
         .search-collapsed {
           left: -8px;
-          top: calc(~'50% - 10px');
+          top: 0;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         &-collapsed {
