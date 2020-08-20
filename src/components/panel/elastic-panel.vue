@@ -1,8 +1,8 @@
 <template>
-  <div class="auc-elastic-panel">
+  <div class="au-elastic-panel">
     <au-toolkit
       v-if="transformative"
-      class="auc-elastic-panel-trigger"
+      class="au-elastic-panel-trigger"
       init-position="right"
       direction="vertical"
       @onclick="handleModelTriggerClick"
@@ -14,12 +14,12 @@
       </slot>
     </au-toolkit>
     <div
-      class="auc-elastic-panel-wrapper"
-      :class="`auc-elastic-panel-${iTransformed ? 'horizontal' : 'vertical'} auc-elastic-panel-${placement}`"
+      class="au-elastic-panel-wrapper"
+      :class="`au-elastic-panel-${iTransformed ? 'horizontal' : 'vertical'} au-elastic-panel-${placement}`"
     >
       <div
-        class="auc-elastic-panel-search"
-        :class="`auc-elastic-panel-search-${placement} auc-elastic-panel-search-${iCollapsed ? 'collapsed' : ''}`"
+        class="au-elastic-panel-search"
+        :class="`au-elastic-panel-search-${placement} au-elastic-panel-search-${iCollapsed ? 'collapsed' : ''}`"
       >
         <div class="search-content">
           <slot name="form">You should provide a slot named "form"</slot>
@@ -28,7 +28,7 @@
           <au-iconfont :type="collapsedIcon"></au-iconfont>
         </div>
       </div>
-      <div class="auc-elastic-panel-content">
+      <div class="au-elastic-panel-content">
         <slot name="data">You should provide a slot named "data"</slot>
       </div>
     </div>
@@ -148,10 +148,10 @@ export default class ElasticPanel extends Vue {
 <style lang="less" scoped>
 @import '../../style/index';
 
-.auc-elastic-panel {
+.au-elastic-panel {
   width: 100%;
 
-  .auc-elastic-panel-trigger {
+  .au-elastic-panel-trigger {
     height: 36px;
     width: 36px;
     border-radius: 50%;
@@ -163,10 +163,10 @@ export default class ElasticPanel extends Vue {
     align-items: center;
   }
 
-  .auc-elastic-panel-wrapper {
+  .au-elastic-panel-wrapper {
     display: flex;
 
-    .auc-elastic-panel-search {
+    .au-elastic-panel-search {
       flex-shrink: 0;
       position: relative;
 
@@ -181,16 +181,16 @@ export default class ElasticPanel extends Vue {
       }
     }
 
-    .auc-elastic-panel-content {
+    .au-elastic-panel-content {
       flex: 1;
     }
   }
 
-  .auc-elastic-panel-vertical {
+  .au-elastic-panel-vertical {
     flex-flow: column;
     flex-direction: column;
 
-    .auc-elastic-panel-search {
+    .au-elastic-panel-search {
       //margin: 0 8px;
       border-bottom: 1px solid #e8e8e8;
 
@@ -209,15 +209,15 @@ export default class ElasticPanel extends Vue {
       }
     }
 
-    .auc-elastic-panel-content {
+    .au-elastic-panel-content {
       margin-top: 10px;
     }
   }
 
-  .auc-elastic-panel-horizontal {
+  .au-elastic-panel-horizontal {
     flex-flow: row;
 
-    .auc-elastic-panel-search {
+    .au-elastic-panel-search {
       width: 20%;
       min-width: 300px;
       max-width: 500px;
@@ -241,14 +241,14 @@ export default class ElasticPanel extends Vue {
       }
     }
 
-    .auc-elastic-panel-content {
+    .au-elastic-panel-content {
       margin: 0 10px;
     }
 
-    &.auc-elastic-panel-right {
+    &.au-elastic-panel-right {
       flex-direction: row-reverse;
 
-      .auc-elastic-panel-search {
+      .au-elastic-panel-search {
         padding: 0 6px 0 16px;
         transition: all 0.3s;
         border-right: none;
