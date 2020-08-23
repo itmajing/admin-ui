@@ -1,7 +1,7 @@
 <template>
   <div class="au-user-layout">
-    <div class="au-user-layout-content">
-      <div class="au-user-layout-wrapper">
+    <div class="au-user-layout-wrapper">
+      <div class="au-user-layout-content">
         <div class="au-user-layout-content-header">
           <img src="../assets/logo.png" alt="logo" />
           <span>Admin UI</span>
@@ -10,9 +10,9 @@
           <router-view />
         </a-card>
       </div>
-    </div>
-    <div class="au-user-layout-footer">
-      <span>Copyright © 2020 Admin UI</span>
+      <div class="au-user-layout-footer">
+        <span>Copyright © 2020 <a href="https://github.com/itmajing/admin-ui" target="_blank">Admin UI</a></span>
+      </div>
     </div>
     <vue-particles class="au-user-layout-background"></vue-particles>
   </div>
@@ -32,6 +32,7 @@ export default class UserLayout extends Vue {}
 .au-user-layout {
   height: 100%;
   width: 100%;
+  position: relative;
 
   /*禁止复制文本*/
   -moz-user-select: none; /*火狐*/
@@ -39,15 +40,23 @@ export default class UserLayout extends Vue {}
   -ms-user-select: none; /*IE10*/
   user-select: none;
 
-  .au-user-layout-content {
+  .au-user-layout-wrapper {
     position: absolute;
-    top: 120px;
+    left: 0;
+    top: 0;
     width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-flow: column;
 
-    .au-user-layout-wrapper {
+    .au-user-layout-content {
+      flex: auto;
+      display: flex;
+      flex-flow: column;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 120px 0;
+
       .au-user-layout-content-header {
         display: flex;
         justify-content: center;
@@ -79,16 +88,15 @@ export default class UserLayout extends Vue {}
         }
       }
     }
-  }
 
-  .au-user-layout-footer {
-    position: absolute;
-    bottom: 0;
-    height: 64px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .au-user-layout-footer {
+      flex-shrink: 0;
+      padding: 16px;
+      min-height: 64px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   .au-user-layout-background {
