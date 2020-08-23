@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="../favicon.ico">
+    <title>Support - Admin UI</title>
+    <style>
+      html,body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .main {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      ul,li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .content {
+        width: 800px;
+        height: 300px;
+        font-size: 16px;
+      }
+
+      .message {
+        margin-top: 15px;
+        text-align: center;
+        color: #505050;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div class="main">
+      <div class="content">
+        <div class="message">本应用暂不支持移动端，请使用PC端浏览器进行访问。</div>
+      </div>
+    </div>
+  </body>
+</html>
