@@ -229,7 +229,7 @@ export default class CardList extends Vue {
   width: 100%;
 
   .card-wrapper {
-    /deep/ .ant-card-bordered {
+    ::v-deep(.ant-card-bordered) {
       border-style: dashed;
     }
   }
@@ -266,7 +266,7 @@ export default class CardList extends Vue {
 }
 
 /*override form-item style*/
-/deep/ .ant-form-item {
+::v-deep(.ant-form-item) {
   display: flex;
   margin-bottom: 10px;
 

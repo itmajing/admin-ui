@@ -287,7 +287,7 @@ export default class TableList extends Vue {
       flex-shrink: 0;
     }
 
-    /deep/ .ant-btn {
+    ::v-deep(.ant-btn) {
       margin-right: 6px;
     }
   }
@@ -304,7 +304,7 @@ export default class TableList extends Vue {
 }
 
 /*override form-item style*/
-/deep/ .ant-form-item {
+::v-deep(.ant-form-item) {
   display: flex;
   margin-bottom: 10px;
 

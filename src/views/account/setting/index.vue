@@ -72,7 +72,7 @@ export default class AccountSetting extends Vue {
     border-right: 1px solid #e8e8e8;
     width: 224px;
 
-    /deep/ .ant-menu {
+    ::v-deep(.ant-menu) {
       border-right: none;
     }
   }

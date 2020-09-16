@@ -1,15 +1,15 @@
-import _Vue, { PluginObject } from 'vue'
+import { App, Plugin } from 'vue';
 import { LoggerOption } from './types/logger'
 import { AuLogger } from './logger'
 
 let instance = new AuLogger()
 
-const plugin: PluginObject<LoggerOption> = {
-  install(Vue: typeof _Vue, options?: LoggerOption) {
+const plugin: Plugin = {
+  install(app: App, options?: LoggerOption) {
     if (options) {
       instance = new AuLogger(options)
     }
-    Vue.prototype.$logger = instance
+    app.config.globalProperties.$logger = instance
   },
 }
 

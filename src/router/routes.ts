@@ -1,7 +1,7 @@
-import { RouteConfig } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router'
 import { MainLayout, UserLayout } from '@/layouts'
 
-const userRoutes: RouteConfig[] = [
+const userRoutes: RouteRecordRaw[] = [
   {
     path: '/user',
     component: UserLayout,
@@ -34,7 +34,7 @@ const userRoutes: RouteConfig[] = [
 /**
  * 首页路由
  */
-const homeRoute: RouteConfig = {
+const homeRoute: RouteRecordRaw = {
   name: 'home',
   path: '/home',
   meta: {
@@ -44,7 +44,7 @@ const homeRoute: RouteConfig = {
   component: () => import(/* webpackChunkName: "home" */ '@/views/home/home.vue'),
 }
 
-const appRoutes: RouteConfig[] = [
+const appRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'main',

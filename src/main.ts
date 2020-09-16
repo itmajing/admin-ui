@@ -1,4 +1,5 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -12,19 +13,16 @@ import AntDesign from 'ant-design-vue'
 import AuComponents from '@/components'
 import './style/index.less'
 
-Vue.use(Logger)
-Vue.use(Utils)
-Vue.use(Date)
-Vue.use(Global)
-Vue.use(Axios)
-Vue.use(Particles)
-Vue.use(AntDesign)
-Vue.use(AuComponents)
-
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+createApp(App)
+  .use(Logger)
+  .use(Logger)
+  .use(Utils)
+  .use(Date)
+  .use(Global)
+  .use(Axios)
+  .use(Particles)
+  .use(AntDesign)
+  .use(AuComponents)
+  .use(store)
+  .use(router)
+  .mount('#app')

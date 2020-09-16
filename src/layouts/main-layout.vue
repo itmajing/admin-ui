@@ -361,8 +361,8 @@ export default class MainLayout extends Vue {
       overflow-x: hidden;
       border-top: rgba(29, 35, 41, 0.05) solid 1px;
 
-      & /deep/ .ant-menu-inline,
-      & /deep/ .ant-menu-vertical {
+      & ::v-deep(.ant-menu-inline),
+      & ::v-deep(.ant-menu-vertical) {
         border: none;
       }
 
@@ -413,7 +413,7 @@ export default class MainLayout extends Vue {
       overflow: hidden;
       display: flex;
 
-      /deep/ .ant-tabs {
+      ::v-deep(.ant-tabs) {
         width: calc(~'100% - 38px');
 
         .ant-tabs-nav-container-scrolling {
