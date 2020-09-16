@@ -1,9 +1,9 @@
-import _Vue, { PluginObject } from 'vue'
+import { App, Plugin } from 'vue';
 import AuAxios from './axios'
 
-const plugin: PluginObject<any> = {
-  install(Vue: typeof _Vue) {
-    Vue.prototype.$axios = AuAxios
+const plugin: Plugin = {
+  install(app: App) {
+    app.config.globalProperties.$axios = AuAxios;
   },
 }
 

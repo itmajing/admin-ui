@@ -1,10 +1,9 @@
-import _Vue, { PluginObject } from 'vue'
+import { App, Plugin } from 'vue';
 import AuDate from './date'
 
-const plugin: PluginObject<any> = {
-  install(Vue: typeof _Vue) {
-    Vue.prototype.$date = AuDate
-    Vue.filter('timestamp', AuDate.format)
+const plugin: Plugin = {
+  install(app: App) {
+    app.config.globalProperties.$date = AuDate;
   },
 }
 

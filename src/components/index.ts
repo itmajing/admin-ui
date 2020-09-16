@@ -1,7 +1,7 @@
-import _Vue, { PluginObject } from 'vue'
-import AuIconfont from './icon/index'
-import AuToolkit from './toolkit/toolkit.vue'
-import AuElasticPanel from './panel/elastic-panel.vue'
+import { App, Plugin } from 'vue';
+import AuIconfont from './icon/index';
+import AuToolkit from './toolkit/toolkit.vue';
+import AuElasticPanel from './panel/elastic-panel.vue';
 
 const components: any = {
   AuIconfont,
@@ -9,10 +9,10 @@ const components: any = {
   AuElasticPanel,
 }
 
-const AuComponents: PluginObject<any> = {
-  install(Vue: typeof _Vue) {
+const AuComponents: Plugin = {
+  install(app: App) {
     Object.keys(components).forEach(key => {
-      Vue.component(key, components[key])
+      app.component(key, components[key])
     })
   },
 }

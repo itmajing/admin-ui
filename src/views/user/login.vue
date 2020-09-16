@@ -218,15 +218,15 @@ export default class Login extends Vue {
 .au-user-login {
   position: relative;
 
-  & /deep/ .ant-tabs-bar {
+  & ::v-deep(.ant-tabs-bar) {
     border: none;
   }
 
-  & /deep/ .ant-tabs-nav-scroll {
+  & ::v-deep(.ant-tabs-nav-scroll) {
     text-align: center;
   }
 
-  & /deep/ .ant-card-hoverable {
+  & ::v-deep(.ant-card-hoverable) {
     cursor: auto;
   }
 }

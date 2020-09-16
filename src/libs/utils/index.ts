@@ -1,9 +1,9 @@
-import _Vue, { PluginObject } from 'vue'
+import { App, Plugin } from 'vue';
 import AuUtils from './utils'
 
-const plugin: PluginObject<any> = {
-  install(Vue: typeof _Vue) {
-    Vue.prototype.$utils = AuUtils
+const plugin: Plugin = {
+  install(app: App) {
+    app.config.globalProperties.$utils = AuUtils
   },
 }
 
