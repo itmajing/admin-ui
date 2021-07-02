@@ -7,15 +7,17 @@
 </template>
 
 <script>
-import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
+import { defineComponent } from 'vue';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 
-export default {
-  data() {
+export default defineComponent({
+  setup() {
+    const locale = zhCN;
     return {
-      locale: zhCN,
-    }
+      locale,
+    };
   },
-}
+});
 </script>
 
 <style lang="less">

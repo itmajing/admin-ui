@@ -1,4 +1,4 @@
-import { UtilsObject } from './types/utils'
+import { UtilsObject } from './types/utils';
 
 class AuUtils implements UtilsObject {
   /**
@@ -7,7 +7,7 @@ class AuUtils implements UtilsObject {
    * @param data 值
    */
   setSessionStorageItem(key: string, data: any) {
-    sessionStorage.setItem(key, JSON.stringify(data))
+    sessionStorage.setItem(key, JSON.stringify(data));
   }
 
   /**
@@ -17,16 +17,16 @@ class AuUtils implements UtilsObject {
    * @returns {*} 值
    */
   getSessionStorageItem(key: string, data?: any) {
-    const json = sessionStorage.getItem(key)
+    const json = sessionStorage.getItem(key);
     if (json) {
-      return JSON.parse(json)
+      return JSON.parse(json);
     } else {
-      return data || undefined
+      return data || undefined;
     }
   }
 
   removeSessionStorageItem(key: string) {
-    sessionStorage.removeItem(key)
+    sessionStorage.removeItem(key);
   }
 
   /**
@@ -35,7 +35,7 @@ class AuUtils implements UtilsObject {
    * @param data 值
    */
   setLocalStorageItem(key: string, data: any) {
-    localStorage.setItem(key, JSON.stringify(data))
+    localStorage.setItem(key, JSON.stringify(data));
   }
 
   /**
@@ -45,17 +45,17 @@ class AuUtils implements UtilsObject {
    * @returns {*} 值
    */
   getLocalStorageItem(key: string, data?: any) {
-    const json = localStorage.getItem(key)
+    const json = localStorage.getItem(key);
     if (json) {
-      return JSON.parse(json)
+      return JSON.parse(json);
     } else {
-      return data || undefined
+      return data || undefined;
     }
   }
 
   removeLocalStorageItem(key: string) {
-    localStorage.removeItem(key)
+    localStorage.removeItem(key);
   }
 }
 
-export default new AuUtils()
+export default new AuUtils();

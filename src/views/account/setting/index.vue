@@ -17,49 +17,63 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent, markRaw, reactive } from 'vue';
+import Base from './base.vue';
+import Security from './security.vue';
+import Binding from './binding.vue';
+import Notification from './notification.vue';
 
-import Base from './base.vue'
-import Security from './security.vue'
-import Binding from './binding.vue'
-import Notification from './notification.vue'
-
-@Component
-export default class AccountSetting extends Vue {
-  settingMenus = [
-    {
-      key: 'base',
-      title: '基本设置',
-      component: Base,
-    },
-    {
-      key: 'security',
-      title: '安全设置',
-      component: Security,
-    },
-    {
-      key: 'binding',
-      title: '账户绑定',
-      component: Binding,
-    },
-    {
-      key: 'notification',
-      title: '消息通知',
-      component: Notification,
-    },
-  ]
-  currentMenu = this.settingMenus[0]
-  selectedKeys = [this.currentMenu.key]
-
-  handleMenuSelect({ key = '' }) {
-    this.selectedKeys = [key]
-
-    const menu = this.settingMenus.find(item => item.key === key)
-    if (menu) {
-      this.currentMenu = menu
-    }
-  }
+export interface Menu {
+  key: string;
+  title: string;
+  component: any;
 }
+
+export default defineComponent({
+  setup() {
+    const settingMenus = reactive<Menu[]>([
+      {
+        key: 'base',
+        title: '基本设置',
+        component: markRaw(Base),
+      },
+      {
+        key: 'security',
+        title: '安全设置',
+        component: markRaw(Security),
+      },
+      {
+        key: 'binding',
+        title: '账户绑定',
+        component: markRaw(Binding),
+      },
+      {
+        key: 'notification',
+        title: '消息通知',
+        component: markRaw(Notification),
+      },
+    ]);
+
+    let currentMenu = reactive<Menu>(settingMenus[0]);
+    let selectedKeys = reactive<string[]>([currentMenu.key]);
+
+    const handleMenuSelect = ({ key = '' }) => {
+      selectedKeys = [key];
+
+      const menu = settingMenus.find((item) => item.key === key);
+      if (menu) {
+        currentMenu = menu;
+      }
+    };
+
+    return {
+      settingMenus,
+      currentMenu,
+      selectedKeys,
+      handleMenuSelect,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>

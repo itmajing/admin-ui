@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Prop, Vue, Watch } from 'vue-property-decorator'
-import { Menu as AntMenu } from 'ant-design-vue'
+import { defineComponent } from 'vue';
+import { Menu as AntMenu } from 'ant-design-vue';
 
 /**
  * 子菜单
@@ -54,107 +54,116 @@ const ContextSubMenu = {
       default: () => ({}),
     },
   },
-}
+};
 
 interface Menu {
-  key: string
-  title: string
-  icon: string
-  children?: Array<Menu>
+  key: string;
+  title: string;
+  icon: string;
+  children?: Array<Menu>;
 }
 
 interface Position {
-  x: number
-  y: number
+  x: number;
+  y: number;
 }
 
-@Component({
+defineComponent({
   name: 'ContextMenu',
   components: {
     ContextSubMenu: ContextSubMenu,
   },
-})
+  setup() {
+    const insideVisible = true;
+    const insideMenuList: Array<Menu> = [];
+    const insidePosition: Position = {
+      x: 0,
+      y: 0,
+    };
+  },
+});
+
 export default class ContextMenu extends Vue {
-  $refs!: { contextMenuTrigger: HTMLFormElement }
-  insideVisible = true
-  insideMenuList: Array<Menu> = []
+  $refs!: { contextMenuTrigger: HTMLFormElement };
+  insideVisible = true;
+  insideMenuList: Array<Menu> = [];
   insidePosition: Position = {
     x: 0,
     y: 0,
-  }
+  };
 
   @Model('change', {
     type: Boolean,
     default: () => {
-      return false
+      return false;
     },
   })
-  readonly visible!: boolean
+  readonly visible!: boolean;
 
   @Prop({
     type: Array,
     default: () => {
-      return []
+      return [];
     },
   })
-  readonly menuList!: Array<any>
+  readonly menuList!: Array<any>;
 
   @Prop({
     type: Object,
     default: () => {
-      return {}
+      return {};
     },
   })
-  readonly position!: Position
+  readonly position!: Position;
 
   get contextStyle() {
     return {
       left: `${this.insidePosition.x || 0}px`,
       top: `${this.insidePosition.y || 0}px`,
-    }
+    };
   }
 
   @Watch('visible')
   onVisibleChange(visible: boolean) {
-    this.insideVisible = visible
+    this.insideVisible = visible;
   }
 
   @Watch('menuList')
   onMenuListChange(menuList: []) {
-    this.insideMenuList = menuList
+    this.insideMenuList = menuList;
   }
 
   @Watch('position')
   onPositionChange(position: Position) {
-    this.insidePosition = position
+    this.insidePosition = position;
   }
 
   setVisible(visible: boolean) {
     this.$nextTick(() => {
-      this.insideVisible = visible
-    })
+      this.insideVisible = visible;
+    });
   }
 
   setPosition(position: Position) {
     this.$nextTick(() => {
-      this.insidePosition = position
-    })
+      this.insidePosition = position;
+    });
   }
 
   setMenuList(menuList: Array<Menu>) {
     this.$nextTick(() => {
-      this.insideMenuList = menuList
-    })
+      this.insideMenuList = menuList;
+    });
   }
 
   handleVisibleChange(visible: boolean) {
-    this.$emit('change', visible)
+    this.$emit('change', visible);
   }
 
   handleMenuClick(payload: any) {
-    this.insideVisible = false
-    this.$emit('change', false)
-    this.$emit('action', payload)
+    this.insideVisible = false;
+    this.$emit('change', false);
+    this.$emit('action', payload);
   }
 }
 </script>

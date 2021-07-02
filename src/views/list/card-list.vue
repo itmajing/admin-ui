@@ -2,42 +2,50 @@
   <div class="au-page-card-list">
     <au-elastic-panel :transformative="false">
       <template #form>
-        <a-form-model class="search-form">
+        <a-form class="search-form">
           <a-row :gutter="16">
             <a-col v-bind="formGridPros">
-              <a-form-model-item label="操作系统">
+              <a-form-item label="操作系统">
                 <a-select v-model="queryParam.os" allowClear placeholder="请选择操作系统">
                   <a-select-option v-for="key in Object.keys(osMap)" :value="key" :key="key">
                     <au-iconfont :type="osMap[key].icon" />
                     <span style="margin-left: 5px">{{ osMap[key].label }}</span>
                   </a-select-option>
                 </a-select>
-              </a-form-model-item>
+              </a-form-item>
             </a-col>
             <a-col v-bind="formGridPros">
-              <a-form-model-item label="运行状态">
+              <a-form-item label="运行状态">
                 <a-select v-model="queryParam.status" allowClear placeholder="请选择运行状态">
                   <a-select-option v-for="key in Object.keys(statusMap)" :value="key" :key="key">
                     <a-badge :status="statusMap[key].status" :text="statusMap[key].label" />
                   </a-select-option>
                 </a-select>
-              </a-form-model-item>
+              </a-form-item>
             </a-col>
             <a-col v-bind="formGridPros" style="text-align: right; float: right">
-              <a-form-model-item>
+              <a-form-item>
                 <a-button type="primary">查询</a-button>
                 <a-button style="margin-left: 8px">重置</a-button>
-              </a-form-model-item>
+              </a-form-item>
             </a-col>
           </a-row>
-        </a-form-model>
+        </a-form>
       </template>
       <template #data>
         <a-row :gutter="[16, 16]">
           <a-col v-bind="cardGridProps" class="card-wrapper">
-            <a-card :hoverable="true" :bodyStyle="{ padding: '0' }" style="{ border-style: dashed }">
+            <a-card
+              :hoverable="true"
+              :bodyStyle="{ padding: '0' }"
+              style="
+                 {
+                  border-style: dashed;
+                }
+              "
+            >
               <div class="card-content card-content-add">
-                <a-icon type="plus" :style="{ fontSize: '26px' }" />
+                <plus-outlined :style="{ fontSize: '26px' }" />
               </div>
             </a-card>
           </a-col>
@@ -63,7 +71,10 @@
                   </div>
                   <div style="height: 30px; display: flex; flex-shrink: 0">
                     <div style="flex: auto">
-                      <a-badge :status="statusMap[item.status].status" :text="statusMap[item.status].label" />
+                      <a-badge
+                        :status="statusMap[item.status].status"
+                        :text="statusMap[item.status].label"
+                      />
                     </div>
                     <span>{{ item.ip }}</span>
                   </div>
@@ -78,148 +89,160 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent, markRaw, reactive } from 'vue';
+import { PlusOutlined } from '@ant-design/icons-vue';
 
-@Component
-export default class CardList extends Vue {
-  formGridPros = {
-    sm: 24,
-    md: 12,
-    lg: 8,
-    xl: 6,
-    xxl: 4,
-  }
-  cardGridProps = {
-    sm: 24,
-    md: 12,
-    lg: 12,
-    xl: 8,
-    xxl: 6,
-  }
-  queryParam = {
-    os: undefined,
-    status: undefined,
-  }
-  osMap = {
-    windows: {
-      icon: 'windows',
-      label: 'Windows',
-    },
-    centos: {
-      icon: 'centos',
-      label: 'CentOS',
-    },
-    ubuntu: {
-      icon: 'ubuntu',
-      label: 'Ubuntu',
-    },
-    debian: {
-      icon: 'debian',
-      label: 'Debian',
-    },
-    opensuse: {
-      icon: 'suse',
-      label: 'OpenSUSE',
-    },
-  }
-  statusMap = {
-    0: {
-      status: 'default',
-      label: '已关机',
-    },
-    1: {
-      status: 'success',
-      label: '运行中',
-    },
-    2: {
-      status: 'processing',
-      label: '重启中',
-    },
-  }
-
-  cardData = [
-    {
-      id: 'a1a6ccdcff044e7485d69a941ec9cbae',
-      os: 'windows',
-      version: '2012 R2',
-      status: 1,
-      ip: '10.0.12.210',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: '092a60a2f2854f63a35dd31459c1eae2',
-      os: 'centos',
-      version: '7.3',
-      status: 1,
-      ip: '10.0.12.211',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: '36a17bb1b78d499aa6f43b73b28793fc',
-      os: 'opensuse',
-      version: '42.3',
-      status: 1,
-      ip: '10.0.12.212',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: 'ce3dc47a0fcd4d6fa16918c0eab2f24d',
-      os: 'centos',
-      version: '7.3',
-      status: 1,
-      ip: '10.0.12.213',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: 'ad669f4f3b404097935fa2f9f64885f5',
-      os: 'centos',
-      version: '7.3',
-      status: 1,
-      ip: '10.0.12.214',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: 'da2b90bb735849fcb7525221d7e9e675',
-      os: 'centos',
-      version: '7.3',
-      status: 1,
-      ip: '10.0.12.215',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: 'c8505a5131cf4a8db5931d303e2f88ed',
-      os: 'ubuntu',
-      version: '18.04',
-      status: 1,
-      ip: '10.0.12.216',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: 'a02f97d88bd345b88f3f714bfc12e5dd',
-      os: 'windows',
-      version: '2012 R2',
-      status: 0,
-      ip: '10.0.12.217',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: 'eadf48a4f1ce4028866ca1bc2298637a',
-      os: 'ubuntu',
-      version: '18.04',
-      status: 1,
-      ip: '10.0.12.218',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-    {
-      id: '6f7b12774e5a47da80807e5938992870',
-      os: 'centos',
-      version: '7.4',
-      status: 1,
-      ip: '10.0.12.219',
-      info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
-    },
-  ]
-}
+export default defineComponent({
+  components: {
+    PlusOutlined,
+  },
+  setup() {
+    const formGridPros = reactive({
+      sm: 24,
+      md: 12,
+      lg: 8,
+      xl: 6,
+      xxl: 4,
+    });
+    const cardGridProps = reactive({
+      sm: 24,
+      md: 12,
+      lg: 12,
+      xl: 8,
+      xxl: 6,
+    });
+    const queryParam = reactive({
+      os: undefined,
+      status: undefined,
+    });
+    const osMap = markRaw({
+      windows: {
+        icon: 'windows',
+        label: 'Windows',
+      },
+      centos: {
+        icon: 'centos',
+        label: 'CentOS',
+      },
+      ubuntu: {
+        icon: 'ubuntu',
+        label: 'Ubuntu',
+      },
+      debian: {
+        icon: 'debian',
+        label: 'Debian',
+      },
+      opensuse: {
+        icon: 'suse',
+        label: 'OpenSUSE',
+      },
+    });
+    const statusMap = markRaw({
+      0: {
+        status: 'default',
+        label: '已关机',
+      },
+      1: {
+        status: 'success',
+        label: '运行中',
+      },
+      2: {
+        status: 'processing',
+        label: '重启中',
+      },
+    });
+    const cardData = reactive([
+      {
+        id: 'a1a6ccdcff044e7485d69a941ec9cbae',
+        os: 'windows',
+        version: '2012 R2',
+        status: 1,
+        ip: '10.0.12.210',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: '092a60a2f2854f63a35dd31459c1eae2',
+        os: 'centos',
+        version: '7.3',
+        status: 1,
+        ip: '10.0.12.211',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: '36a17bb1b78d499aa6f43b73b28793fc',
+        os: 'opensuse',
+        version: '42.3',
+        status: 1,
+        ip: '10.0.12.212',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: 'ce3dc47a0fcd4d6fa16918c0eab2f24d',
+        os: 'centos',
+        version: '7.3',
+        status: 1,
+        ip: '10.0.12.213',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: 'ad669f4f3b404097935fa2f9f64885f5',
+        os: 'centos',
+        version: '7.3',
+        status: 1,
+        ip: '10.0.12.214',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: 'da2b90bb735849fcb7525221d7e9e675',
+        os: 'centos',
+        version: '7.3',
+        status: 1,
+        ip: '10.0.12.215',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: 'c8505a5131cf4a8db5931d303e2f88ed',
+        os: 'ubuntu',
+        version: '18.04',
+        status: 1,
+        ip: '10.0.12.216',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: 'a02f97d88bd345b88f3f714bfc12e5dd',
+        os: 'windows',
+        version: '2012 R2',
+        status: 0,
+        ip: '10.0.12.217',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: 'eadf48a4f1ce4028866ca1bc2298637a',
+        os: 'ubuntu',
+        version: '18.04',
+        status: 1,
+        ip: '10.0.12.218',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+      {
+        id: '6f7b12774e5a47da80807e5938992870',
+        os: 'centos',
+        version: '7.4',
+        status: 1,
+        ip: '10.0.12.219',
+        info: '4核 - 16GB内存 - 系统盘 1TB SSD云盘 - 杭州',
+      },
+    ]);
+    return {
+      formGridPros,
+      cardGridProps,
+      queryParam,
+      osMap,
+      statusMap,
+      cardData,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>

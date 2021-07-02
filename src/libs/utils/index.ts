@@ -1,12 +1,17 @@
 import { App, Plugin } from 'vue';
-import AuUtils from './utils'
+import { UtilsObject } from './types/utils';
+import AuUtils from './utils';
 
 const plugin: Plugin = {
   install(app: App) {
-    app.config.globalProperties.$utils = AuUtils
+    app.config.globalProperties.$utils = AuUtils;
   },
-}
+};
 
-export { AuUtils }
+const useUtils = (): UtilsObject => {
+  return AuUtils;
+};
 
-export default plugin
+export { AuUtils, useUtils };
+
+export default plugin;

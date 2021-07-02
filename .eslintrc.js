@@ -16,12 +16,13 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    semi: ['warn', 'never'],
-    quotes: ['warn', 'single'],
+    semi: ['error', 'always'],
+    quotes: ['error', 'single'],
     eqeqeq: ['error', 'always'],
     'comma-dangle': ['warn', 'always-multiline'],
     'comma-spacing': ['warn', { before: false, after: true }],
     'no-inline-comments': 0,
     '@typescript-eslint/no-explicit-any': 'off',
+    'vue/no-v-model-argument': 'off',
   },
-}
+};

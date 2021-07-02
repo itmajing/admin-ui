@@ -7,14 +7,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent, onMounted } from 'vue';
+import { useLogger } from '@/libs/logger';
+import { useGlobal } from '@/libs/global';
 
-@Component
-export default class Home extends Vue {
-  mounted(): void {
-    this.$logger.info(this.$global)
-  }
-}
+export default defineComponent({
+  setup() {
+    onMounted(() => {
+      const logger = useLogger();
+      const global = useGlobal();
+
+      logger.info(global);
+    });
+  },
+});
 </script>
 
 <style lang="less" scoped></style>

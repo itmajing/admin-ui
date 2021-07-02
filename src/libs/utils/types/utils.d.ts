@@ -1,21 +1,21 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 interface UtilsObject {
-  setSessionStorageItem(key: string, data: any): void
+  setSessionStorageItem(key: string, data: any): void;
 
-  getSessionStorageItem(key: string, data?: any): any
+  getSessionStorageItem(key: string, data?: any): any;
 
-  removeSessionStorageItem(key: string): void
+  removeSessionStorageItem(key: string): void;
 
-  setLocalStorageItem(key: string, data: any): void
+  setLocalStorageItem(key: string, data: any): void;
 
-  getLocalStorageItem(key: string, data?: any): any
+  getLocalStorageItem(key: string, data?: any): any;
 
-  removeLocalStorageItem(key: string): void
+  removeLocalStorageItem(key: string): void;
 }
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $utils: UtilsObject
+    $utils: UtilsObject;
   }
 }

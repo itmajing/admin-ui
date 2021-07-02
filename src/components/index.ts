@@ -7,14 +7,14 @@ const components: any = {
   AuIconfont,
   AuToolkit,
   AuElasticPanel,
-}
+};
 
 const AuComponents: Plugin = {
   install(app: App) {
-    Object.keys(components).forEach(key => {
-      app.component(key, components[key])
-    })
+    Object.keys(components).forEach((key) => {
+      app.component(key, components[key]);
+    });
   },
-}
+};
 
-export default AuComponents
+export default AuComponents;

@@ -1,12 +1,17 @@
 import { App, Plugin } from 'vue';
-import AuGlobal from './global'
+import { GlobalObject } from './types/global';
+import AuGlobal from './global';
 
 const plugin: Plugin = {
   install(app: App) {
-    app.config.globalProperties.$global = AuGlobal
+    app.config.globalProperties.$global = AuGlobal;
   },
-}
+};
 
-export { AuGlobal }
+const useGlobal = (): GlobalObject => {
+  return AuGlobal;
+};
 
-export default plugin
+export { AuGlobal, useGlobal };
+
+export default plugin;

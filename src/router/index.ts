@@ -1,69 +1,62 @@
-import {
-  createRouter,
-  createWebHistory,
-  NavigationGuardNext,
-  RouteLocationNormalized,
-} from 'vue-router';
-import store from '@/store/index'
-import { notification } from 'ant-design-vue'
-import { userRoutes } from './routes'
-import { AuUtils } from '@/libs/utils'
-import { AUTH_HEADER } from '@/constant'
+import { createRouter, createWebHistory, RouteLocationNormalized } from 'vue-router';
+import store from '@/store/index';
+import { userRoutes } from './routes';
+import { AuUtils } from '@/libs/utils';
+import { AUTH_HEADER } from '@/constant';
+import { addRoutes } from '@/router/utils';
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [...userRoutes],
-})
+});
 
-const loginRoute = 'login'
-const defaultRoute = 'home'
-const passRouteList = ['login', 'register']
+const loginRoute = 'login';
+const defaultRoute = 'home';
+const passRouteList = ['login', 'register'];
 
-router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-  const loginStatus = store.getters.loginStatus
+const initRoutes = () => {
+  return new Promise((resolve) => {
+    store.dispatch('getPermissions').then((userPermissions) => {
+      store.dispatch('generateRoutes', userPermissions).then((accessedRoutes) => {
+        addRoutes(router, accessedRoutes);
+        resolve(true);
+      });
+    });
+  });
+};
+
+router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized) => {
+  const loginStatus = store.getters.loginStatus;
   if (loginStatus) {
-    const permissions = store.getters.permissions
+    const permissions = store.getters.permissions;
     if (!permissions) {
-      store
-        .dispatch('getPermissions')
-        .then(permissions => {
-          store.dispatch('generateRoutes', permissions).then(() => {
-            router.addRoute(store.getters.accessedRoutes)
-            const redirect = decodeURIComponent(`${(from.query && from.query.redirect) || to.path}`)
-            if (to.path === redirect) {
-              next({ ...to, replace: true })
-            } else {
-              next({ path: redirect, replace: true })
-            }
-          })
-        })
-        .catch(() => {
-          notification.error({
-            message: '错误',
-            description: '请求用户信息失败，请重试',
-          })
-          next({ name: loginRoute, query: { redirect: to.fullPath } })
-        })
+      await initRoutes();
+      const redirect = decodeURIComponent(`${(from.query && from.query.redirect) || to.path}`);
+      if (to.path === redirect) {
+        return { ...to, replace: true };
+      } else {
+        return { path: redirect, replace: true };
+      }
     } else {
       if (to.name === loginRoute) {
-        next({ name: defaultRoute })
+        return { name: defaultRoute };
       } else {
-        next()
+        return true;
       }
     }
   } else {
-    if (passRouteList.includes(to.name as string || '')) {
-      next()
+    if (passRouteList.includes((to.name as string) || '')) {
+      return true;
     } else {
-      next({ name: loginRoute, query: { redirect: to.fullPath } })
+      return { name: loginRoute, query: { redirect: to.fullPath } };
     }
   }
-})
+});
 
 // reset access-token when refresh page
-const accessToken = AuUtils.getSessionStorageItem(AUTH_HEADER)
+const accessToken = AuUtils.getSessionStorageItem(AUTH_HEADER);
 if (accessToken) {
-  store.commit('setAccessToken', accessToken)
+  store.commit('setAccessToken', accessToken);
 }
 
-export default router
+export default router;

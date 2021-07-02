@@ -1,18 +1,22 @@
 import { App, Plugin } from 'vue';
-import { LoggerOption } from './types/logger'
-import { AuLogger } from './logger'
+import { LoggerOption } from './types/logger';
+import { AuLogger } from './logger';
 
-let instance = new AuLogger()
+let instance = new AuLogger();
 
 const plugin: Plugin = {
   install(app: App, options?: LoggerOption) {
     if (options) {
-      instance = new AuLogger(options)
+      instance = new AuLogger(options);
     }
-    app.config.globalProperties.$logger = instance
+    app.config.globalProperties.$logger = instance;
   },
-}
+};
 
-export { instance as AuLogger }
+const useLogger = (): AuLogger => {
+  return instance;
+};
 
-export default plugin
+export { instance as AuLogger, useLogger };
+
+export default plugin;

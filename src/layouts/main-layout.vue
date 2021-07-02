@@ -20,36 +20,38 @@
     <div class="au-main-layout-inside" :class="{ 'au-main-layout-inside-collapsed': collapsed }">
       <div class="au-main-layout-header">
         <div class="au-main-layout-header-trigger" @click.stop="handleMenuFold">
-          <a-icon type="menu-fold" :style="{ fontSize: '18px' }" v-if="!collapsed" />
-          <a-icon type="menu-unfold" :style="{ fontSize: '18px' }" v-else />
+          <menu-fold-outlined :style="{ fontSize: '18px' }" v-if="!collapsed" />
+          <menu-unfold-outlined :style="{ fontSize: '18px' }" v-else />
         </div>
         <div class="au-main-layout-header-placeholder"></div>
         <div class="au-main-layout-header-trigger">
-          <a-icon type="fullscreen" :style="{ fontSize: '18px' }" />
+          <fullscreen-outlined :style="{ fontSize: '18px' }" />
         </div>
         <div class="au-main-layout-header-trigger">
-          <a-icon type="bell" :style="{ fontSize: '18px' }" />
+          <bell-outlined :style="{ fontSize: '18px' }" />
         </div>
         <a-dropdown class="au-main-layout-header-trigger au-main-layout-header-user">
           <div>
             <a-avatar size="small">A</a-avatar>
             <span>Admin</span>
           </div>
-          <a-menu slot="overlay" @click="handleDropdownClick">
-            <a-menu-item key="user">
-              <a-icon type="user" />
-              <span>个人中心</span>
-            </a-menu-item>
-            <a-menu-item key="setting">
-              <a-icon type="setting" />
-              <span>个人设置</span>
-            </a-menu-item>
-            <a-menu-divider />
-            <a-menu-item key="exit">
-              <a-icon type="export" />
-              <span>退出登录</span>
-            </a-menu-item>
-          </a-menu>
+          <template #overlay>
+            <a-menu @click="handleDropdownClick">
+              <a-menu-item key="user">
+                <user-outlined />
+                <span>个人中心</span>
+              </a-menu-item>
+              <a-menu-item key="setting">
+                <setting-outlined />
+                <span>个人设置</span>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="exit">
+                <export-outlined />
+                <span>退出登录</span>
+              </a-menu-item>
+            </a-menu>
+          </template>
         </a-dropdown>
       </div>
       <div class="au-main-layout-tabs">
@@ -71,32 +73,34 @@
         <div class="au-main-layout-tabs-menu">
           <a-dropdown>
             <div class="au-main-layout-tabs-menu-trigger">
-              <a-icon type="down" :style="{ fontSize: '12px' }" />
+              <down-outlined :style="{ fontSize: '12px' }" />
             </div>
-            <a-menu slot="overlay" @click="handleTabMenuClick">
-              <a-menu-item key="close-other">
-                <a-icon type="close" />
-                <span>关闭其他</span>
-              </a-menu-item>
-              <a-menu-item key="close-all">
-                <a-icon type="close-circle" />
-                <span>关闭所有</span>
-              </a-menu-item>
-              <a-menu-item key="reload-page">
-                <a-icon type="reload" />
-                <span>刷新页面</span>
-              </a-menu-item>
-            </a-menu>
+            <template #overlay>
+              <a-menu @click="handleTabMenuClick">
+                <a-menu-item key="close-other">
+                  <close-outlined />
+                  <span>关闭其他</span>
+                </a-menu-item>
+                <a-menu-item key="close-all">
+                  <close-circle-outlined />
+                  <span>关闭所有</span>
+                </a-menu-item>
+                <a-menu-item key="reload-page">
+                  <reload-outlined />
+                  <span>刷新页面</span>
+                </a-menu-item>
+              </a-menu>
+            </template>
           </a-dropdown>
         </div>
       </div>
-      <div class="au-main-layout-content" ref="content">
-        <div class="au-main-layout-content-body" ref="body">
-          <div class="au-main-layout-content-body-wrapper" ref="wrapper">
+      <div class="au-main-layout-content" ref="contentRef">
+        <div class="au-main-layout-content-body" ref="bodyRef">
+          <div class="au-main-layout-content-body-wrapper" ref="wrapperRef">
             <router-view v-if="routerView"></router-view>
           </div>
         </div>
-        <div class="au-main-layout-content-footer" ref="footer" v-if="showFooter">
+        <div class="au-main-layout-content-footer" ref="footerRef" v-if="showFooter">
           Copyright © 2020 C2olShare
         </div>
       </div>
@@ -105,207 +109,302 @@
 </template>
 
 <script lang="ts">
-import { Component, Provide, Vue, Watch } from 'vue-property-decorator'
-import SideMenu from '@/components/menu/side-menu.vue'
-import { Action, Getter } from 'vuex-class'
-import { findMenuByName, Menu } from '@/router/utils'
-import { MultiOptions, MultiTab } from '@/store/modules/application'
-import * as lodash from 'lodash'
+import SideMenu from '@/components/menu/side-menu.vue';
+import * as lodash from 'lodash';
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  provide,
+  ref,
+  watch,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
+import { findMenuByName } from '@/router/utils';
+import { useLogger } from '@/libs/logger';
+import { MultiOptions, MultiTab } from '@/store/modules/application';
+import { message } from 'ant-design-vue';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  FullscreenOutlined,
+  BellOutlined,
+  UserOutlined,
+  SettingOutlined,
+  ExportOutlined,
+  CloseOutlined,
+  CloseCircleOutlined,
+  ReloadOutlined,
+  DownOutlined,
+} from '@ant-design/icons-vue';
 
-@Component({
+const useInitMultiTabs = () => {
+  const store = useStore();
+  const router = useRouter();
+  const route = useRoute();
+  const logger = useLogger();
+  const cachedTitle = ref('');
+  const routerView = ref(true);
+
+  const addMultiTab = (options: MultiOptions) => store.dispatch('addMultiTab', options);
+  const removeMultiTab = (digest: string) => store.dispatch('removeMultiTab', digest);
+  const removeAllMultiTab = () => store.dispatch('removeAllMultiTab');
+  const removeOtherMultiTab = () => store.dispatch('removeOtherMultiTab');
+  const activateMultiTab = (digest: string) => store.dispatch('activateMultiTab', digest);
+
+  const handleOpenMultiTab = (multiOptions: MultiOptions) => {
+    addMultiTab(multiOptions);
+  };
+
+  const handleCloseMultiTab = (digest: string) => {
+    removeMultiTab(digest);
+  };
+
+  const handleTabChange = (digest: string) => {
+    logger.info(`click tab, digest: ${digest}`);
+    activateMultiTab(digest);
+  };
+
+  const handleTabEdit = (digest: string, action: string) => {
+    if (action === 'remove') {
+      logger.info(`remove tab, digest: ${digest}`);
+      removeMultiTab(digest);
+    }
+  };
+
+  const handleRefreshView = () => {
+    routerView.value = false;
+    nextTick(() => {
+      routerView.value = true;
+    });
+  };
+
+  const handleTabMenuClick = ({ key = '' }) => {
+    if (key === 'close-all') {
+      removeAllMultiTab();
+    } else if (key === 'close-other') {
+      removeOtherMultiTab();
+    } else if (key === 'reload-page') {
+      handleRefreshView();
+    }
+  };
+
+  provide('handleOpenMultiTab', handleOpenMultiTab);
+  provide('handleCloseMultiTab', handleCloseMultiTab);
+
+  watch(
+    () => store.getters.activeMultiTab,
+    (multiTab: MultiTab) => {
+      if (!cachedTitle.value) {
+        cachedTitle.value = document.title;
+      }
+
+      // 更新标题
+      if (multiTab.title) {
+        document.title = `${multiTab.title} - ${cachedTitle.value} `;
+      } else {
+        document.title = cachedTitle.value;
+      }
+
+      // 跳转路由
+      if (multiTab.name) {
+        logger.info(`current route: ${String(route.name)}, target route: ${multiTab.name}`);
+
+        if (route.name !== multiTab.name) {
+          router.replace({
+            name: multiTab.name,
+            params: multiTab.params,
+            query: multiTab.query,
+          });
+        }
+      }
+    },
+  );
+
+  onMounted(() => {
+    store.dispatch('initMultiTabs', router.currentRoute.value);
+  });
+
+  onUnmounted(() => {
+    document.title = cachedTitle.value;
+  });
+
+  return {
+    routerView,
+    accessedMenus: computed(() => store.getters.accessedMenus),
+    openedMultiTabs: computed(() => store.getters.openedMultiTabs),
+    activeMultiTab: computed(() => store.getters.activeMultiTab),
+    handleOpenMultiTab,
+    handleCloseMultiTab,
+    handleTabChange,
+    handleTabEdit,
+    handleTabMenuClick,
+  };
+};
+
+const useResizeWindows = () => {
+  const store = useStore();
+
+  const contentRef = ref<HTMLElement>();
+  const wrapperRef = ref<HTMLElement>();
+  const footerRef = ref<HTMLElement>();
+
+  const calcMainLayoutContainerHeight = () => {
+    const contentHeight = contentRef.value?.clientHeight || 0;
+    const footerHeight = footerRef.value?.clientHeight || 0;
+
+    const wrapperEle = wrapperRef.value;
+    if (wrapperEle) {
+      const wrapperPaddingTop = parseFloat(window.getComputedStyle(wrapperEle, null).paddingTop);
+      const wrapperPaddingBottom = parseFloat(
+        window.getComputedStyle(wrapperEle, null).paddingBottom,
+      );
+      const wrapperPadding = wrapperPaddingTop + wrapperPaddingBottom;
+
+      // minus 1 px to avoid accuracy problems
+      return contentHeight - footerHeight - wrapperPadding - 1;
+    }
+  };
+
+  const windowResizeHandler = lodash.debounce(() => {
+    const containerHeight = calcMainLayoutContainerHeight();
+    if (containerHeight) {
+      store.dispatch('updateContainerHeight', containerHeight);
+    }
+  }, 150);
+
+  onMounted(() => {
+    // init by window resize
+    windowResizeHandler();
+    window.addEventListener('resize', windowResizeHandler);
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', windowResizeHandler);
+  });
+
+  return {
+    contentRef,
+    wrapperRef,
+    footerRef,
+  };
+};
+
+export default defineComponent({
   name: 'MainLayout',
   components: {
     SideMenu,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    FullscreenOutlined,
+    BellOutlined,
+    UserOutlined,
+    SettingOutlined,
+    ExportOutlined,
+    CloseOutlined,
+    CloseCircleOutlined,
+    ReloadOutlined,
+    DownOutlined,
   },
-})
-export default class MainLayout extends Vue {
-  $refs!: {
-    content: HTMLElement
-    body: HTMLElement
-    wrapper: HTMLElement
-    footer: HTMLElement
-  }
-  cachedTitle = ''
-  collapsed = false
-  routerView = true
-  windowResizeHandler!: () => void
+  setup() {
+    const { contentRef, wrapperRef, footerRef } = useResizeWindows();
+    const {
+      routerView,
+      accessedMenus,
+      openedMultiTabs,
+      activeMultiTab,
+      handleOpenMultiTab,
+      handleTabChange,
+      handleTabEdit,
+      handleTabMenuClick,
+    } = useInitMultiTabs();
+    console.log('=======accessed menus=====', accessedMenus);
 
-  @Getter('accessedMenus') accessedMenus!: Menu[]
-  @Getter('openedMultiTabs') openedMultiTabs!: MultiTab[]
-  @Getter('activeMultiTab') activeMultiTab!: MultiTab
-  @Action('initMultiTabs') initMultiTabs!: Function
-  @Action('addMultiTab') addMultiTab!: Function
-  @Action('removeMultiTab') removeMultiTab!: Function
-  @Action('removeAllMultiTab') removeAllMultiTab!: Function
-  @Action('removeOtherMultiTab') removeOtherMultiTab!: Function
-  @Action('activateMultiTab') activateMultiTab!: Function
-  @Action('updateContainerHeight') updateContainerHeight!: Function
-  @Action('userLogout') userLogout!: () => Promise<any>
+    const store = useStore();
+    const logger = useLogger();
+    const collapsed = ref(false);
+    const showFooter = computed(() => {
+      const route = useRoute();
+      const { footer = true } = route.meta || {};
+      return footer;
+    });
 
-  @Provide('handleOpenMultiTab') handleOpenMultiTabFunction = this.handleOpenMultiTab
-  @Provide('handleCloseMultiTab') handleCloseMultiTabFunction = this.handleCloseMultiTab
+    /**
+     * 选择菜单
+     */
+    const handleMenuSelect = (param: any) => {
+      logger.info(`select menu, key: ${param.key}, path: ${param.keyPath}`);
+      const accessedMenu = findMenuByName(accessedMenus.value, param.key);
+      const multiOptions: MultiOptions = {
+        name: accessedMenu.name,
+        title: accessedMenu.title,
+      };
+      handleOpenMultiTab(multiOptions);
+    };
 
-  @Watch('activeMultiTab')
-  onActiveTabChange(multiTab: MultiTab) {
-    // 缓存标题
-    if (!this.cachedTitle) {
-      this.cachedTitle = document.title
-    }
+    /**
+     * 侧边栏收起/展开
+     */
+    const handleMenuFold = () => {
+      collapsed.value = !collapsed.value;
+    };
 
-    // 更新标题
-    if (multiTab.title) {
-      document.title = `${multiTab.title} - ${this.cachedTitle} `
-    } else {
-      document.title = this.cachedTitle
-    }
+    const handleUserLogout = () => {
+      store
+        .dispatch('userLogout')
+        .then(() => {
+          message.success('退出成功');
 
-    // 跳转路由
-    if (multiTab.name) {
-      this.$logger.info(`current route: ${this.$route.name}, target route: ${multiTab.name}`)
-
-      if (this.$route.name !== multiTab.name) {
-        this.$router.replace({
-          name: multiTab.name,
-          params: multiTab.params,
-          query: multiTab.query,
+          setTimeout(() => {
+            location.reload();
+          }, 600);
         })
+        .catch(() => {
+          message.error('退出失败');
+        });
+    };
+
+    /**
+     * 下拉菜单
+     */
+    const handleDropdownClick = ({ key = '' }) => {
+      if (key === 'user') {
+        const name = 'account-center';
+        handleOpenMultiTab({ name: name });
+      } else if (key === 'setting') {
+        const name = 'account-setting';
+        handleOpenMultiTab({ name: name });
+      } else if (key === 'exit') {
+        handleUserLogout();
       }
-    }
-  }
+    };
 
-  get showFooter() {
-    const { footer = true } = this.$route.meta || {}
-    return footer
-  }
+    onMounted(() => {
+      logger.info(window.navigator.userAgent);
+    });
 
-  /**
-   * 选择菜单
-   */
-  handleMenuSelect(param: any) {
-    this.$logger.info(`select menu, key: ${param.key}, path: ${param.keyPath}`)
-    const accessedMenu = findMenuByName(this.accessedMenus, param.key)
-    const multiOptions: MultiOptions = {
-      name: accessedMenu.name,
-      title: accessedMenu.title,
-    }
-    this.handleOpenMultiTab(multiOptions)
-  }
-
-  /**
-   * 侧边栏收起/展开
-   */
-  handleMenuFold() {
-    this.collapsed = !this.collapsed
-  }
-
-  /**
-   * 点击标签
-   */
-  handleTabChange(digest: string) {
-    this.$logger.info(`click tab, digest: ${digest}`)
-    this.activateMultiTab(digest)
-  }
-
-  /**
-   * 编辑标签
-   */
-  handleTabEdit(digest: string, action: string) {
-    if (action === 'remove') {
-      this.$logger.info(`remove tab, digest: ${digest}`)
-      this.removeMultiTab(digest)
-    }
-  }
-
-  handleRefreshView() {
-    this.routerView = false
-    this.$nextTick(() => {
-      this.routerView = true
-    })
-  }
-
-  handleTabMenuClick({ key = '' }) {
-    if (key === 'close-all') {
-      this.removeAllMultiTab()
-    } else if (key === 'close-other') {
-      this.removeOtherMultiTab()
-    } else if (key === 'reload-page') {
-      this.handleRefreshView()
-    }
-  }
-
-  /**
-   * 下拉菜单
-   */
-  handleDropdownClick({ key = '' }) {
-    if (key === 'user') {
-      const name = 'account-center'
-      this.handleOpenMultiTab({ name: name })
-    } else if (key === 'setting') {
-      const name = 'account-setting'
-      this.handleOpenMultiTab({ name: name })
-    } else if (key === 'exit') {
-      this.handleUserLogout()
-    }
-  }
-
-  handleUserLogout() {
-    this.userLogout()
-      .then(() => {
-        this.$message.success('退出成功')
-
-        setTimeout(() => {
-          location.reload()
-        }, 600)
-      })
-      .catch(() => {
-        this.$message.error('退出失败')
-      })
-  }
-
-  handleOpenMultiTab(multiOptions: MultiOptions) {
-    this.addMultiTab(multiOptions)
-  }
-
-  handleCloseMultiTab(digest: string) {
-    this.removeMultiTab(digest)
-  }
-
-  calcMainLayoutContainerHeight() {
-    const content = this.$refs.content
-    const contentHeight = content.clientHeight
-
-    const footer = this.$refs.footer
-    const footerHeight = footer ? footer.clientHeight : 0
-
-    const wrapper = this.$refs.wrapper
-    const wrapperPaddingTop = parseFloat(window.getComputedStyle(wrapper, null).paddingTop)
-    const wrapperPaddingBottom = parseFloat(window.getComputedStyle(wrapper, null).paddingBottom)
-    const wrapperPadding = wrapperPaddingTop + wrapperPaddingBottom
-
-    // minus 1 px to avoid accuracy problems
-    return contentHeight - footerHeight - wrapperPadding - 1
-  }
-
-  handleWindowResize() {
-    const containerHeight = this.calcMainLayoutContainerHeight()
-    this.updateContainerHeight(containerHeight)
-  }
-
-  mounted(): void {
-    this.$logger.info(window.navigator.userAgent)
-    this.initMultiTabs(this.$route)
-
-    // handle windows resize event
-    this.handleWindowResize()
-    this.windowResizeHandler = lodash.debounce(this.handleWindowResize, 150)
-    window.addEventListener('resize', this.windowResizeHandler)
-  }
-
-  beforeDestroy(): void {
-    document.title = this.cachedTitle
-    window.removeEventListener('resize', this.windowResizeHandler)
-  }
-}
+    return {
+      contentRef,
+      wrapperRef,
+      footerRef,
+      collapsed,
+      routerView,
+      showFooter,
+      accessedMenus,
+      openedMultiTabs,
+      activeMultiTab,
+      handleTabEdit,
+      handleTabChange,
+      handleTabMenuClick,
+      handleMenuSelect,
+      handleMenuFold,
+      handleDropdownClick,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>
