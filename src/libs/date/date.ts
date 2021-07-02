@@ -1,28 +1,28 @@
-import { DateObject } from './types/date'
-import dayJs from 'dayjs'
+import { DateObject } from './types/date';
+import dayJs from 'dayjs';
 
 class AuDate implements DateObject {
   format(timestamp: number | string | Date, pattern?: string): string {
     if (!pattern) {
-      pattern = 'YYYY-MM-DD HH:mm:ss'
+      pattern = 'YYYY-MM-DD HH:mm:ss';
     }
-    return dayJs(timestamp).format(pattern)
+    return dayJs(timestamp).format(pattern);
   }
 
   timestamp(date?: string | Date): number {
     if (!date) {
-      date = new Date()
+      date = new Date();
     }
 
-    let parseDate: Date
+    let parseDate: Date;
     if (date instanceof Date) {
-      parseDate = date as Date
+      parseDate = date as Date;
     } else {
-      parseDate = new Date(date)
+      parseDate = new Date(date);
     }
 
-    return parseDate.getTime()
+    return parseDate.getTime();
   }
 }
 
-export default new AuDate()
+export default new AuDate();

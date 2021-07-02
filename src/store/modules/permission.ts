@@ -1,37 +1,37 @@
-import { AuUtils } from '@/libs/utils'
-import { AUTH_HEADER, SUCCESS_CODE } from '@/constant'
-import { Module } from 'vuex'
-import { generateMenu, Menu, optimizeRoutes } from '@/router/utils'
-import { appRoutes } from '@/router/routes'
-import { RouteConfig } from 'vue-router'
-import { getUserPermission, userLogout, userMobileLogin, userPasswordLogin } from '@/api/user'
+import { AuUtils } from '@/libs/utils';
+import { AUTH_HEADER, SUCCESS_CODE } from '@/constant';
+import { Module } from 'vuex';
+import { generateMenu, Menu, optimizeRoutes } from '@/router/utils';
+import { appRoutes } from '@/router/routes';
+import { RouteRecordRaw } from 'vue-router';
+import { getUserPermission, userLogout, userMobileLogin, userPasswordLogin } from '@/api/user';
 
-function hasPermission(route: RouteConfig, permissions: string[]) {
+function hasPermission(route: RouteRecordRaw, permissions: string[]) {
   if (route.meta && route.meta.permission) {
-    const permission = route.meta && route.meta.permission
-    return permissions.indexOf(permission) > -1
+    const permission = String(route.meta && route.meta.permission);
+    return permissions.indexOf(permission) > -1;
   }
-  return true
+  return true;
 }
 
-function filterRoutes(routes: RouteConfig[], permissions: string[]) {
-  return routes.filter(route => {
+function filterRoutes(routes: RouteRecordRaw[], permissions: string[]) {
+  return routes.filter((route) => {
     if (hasPermission(route, permissions)) {
       if (route.children && route.children.length) {
-        route.children = filterRoutes(route.children, permissions)
+        route.children = filterRoutes(route.children, permissions);
       }
-      return true
+      return true;
     }
-    return false
-  })
+    return false;
+  });
 }
 
 interface State {
-  accessedMenus: Menu[]
-  accessedRoutes: RouteConfig[]
-  accessToken?: string
-  userInfo?: any
-  permissions?: []
+  accessedMenus: Menu[];
+  accessedRoutes: RouteRecordRaw[];
+  accessToken?: string;
+  userInfo?: any;
+  permissions?: [];
 }
 
 const application: Module<State, any> = {
@@ -44,119 +44,119 @@ const application: Module<State, any> = {
   },
   mutations: {
     setAccessToken(state: State, accessToken: string) {
-      state.accessToken = accessToken
-      AuUtils.setSessionStorageItem(AUTH_HEADER, accessToken)
+      state.accessToken = accessToken;
+      AuUtils.setSessionStorageItem(AUTH_HEADER, accessToken);
     },
     removeAccessToken(state: State) {
-      state.accessToken = ''
-      AuUtils.removeSessionStorageItem(AUTH_HEADER)
+      state.accessToken = '';
+      AuUtils.removeSessionStorageItem(AUTH_HEADER);
     },
-    setAccessedRoutes(state: State, accessedRoutes: RouteConfig[]) {
-      state.accessedRoutes = accessedRoutes
+    setAccessedRoutes(state: State, accessedRoutes: RouteRecordRaw[]) {
+      state.accessedRoutes = accessedRoutes;
     },
     setAccessedMenus(state: State, accessedMenus: Menu[]) {
-      state.accessedMenus = accessedMenus
+      state.accessedMenus = accessedMenus;
     },
     setUserInfo(state: State, userInfo: any) {
-      state.userInfo = userInfo
+      state.userInfo = userInfo;
     },
     setPermissions(state: State, permissions: []) {
-      state.permissions = permissions
+      state.permissions = permissions;
     },
   },
   actions: {
-    userPasswordLogin({ commit }, loginInfo: object) {
+    userPasswordLogin({ commit }, loginInfo: any) {
       return new Promise((resolve, reject) => {
         userPasswordLogin(loginInfo)
           .then(({ data = {} }) => {
             if (data.code === SUCCESS_CODE) {
-              commit('setAccessToken', data.data)
-              resolve()
+              commit('setAccessToken', data.data);
+              resolve(true);
             } else {
-              reject(data.code)
+              reject(data.code);
             }
           })
-          .catch(err => {
-            reject(err)
-          })
-      })
+          .catch((err) => {
+            reject(err);
+          });
+      });
     },
-    userMobileLogin({ commit }, loginInfo: object) {
+    userMobileLogin({ commit }, loginInfo: any) {
       return new Promise((resolve, reject) => {
         userMobileLogin(loginInfo)
           .then(({ data = {} }) => {
             if (data.code === SUCCESS_CODE) {
-              commit('setAccessToken', data.data)
-              resolve()
+              commit('setAccessToken', data.data);
+              resolve(true);
             } else {
-              reject(data.code)
+              reject(data.code);
             }
           })
-          .catch(err => {
-            reject(err)
-          })
-      })
+          .catch((err) => {
+            reject(err);
+          });
+      });
     },
     userLogout({ commit }) {
       return new Promise((resolve, reject) => {
         userLogout()
           .then(({ data = {} }) => {
             if (data.code === SUCCESS_CODE) {
-              commit('removeAccessToken')
-              resolve()
+              commit('removeAccessToken');
+              resolve(true);
             } else {
-              reject(data.code)
+              reject(data.code);
             }
           })
-          .catch(err => {
-            reject(err)
-          })
-      })
+          .catch((err) => {
+            reject(err);
+          });
+      });
     },
     generateRoutes({ commit }, permissions: string[]) {
-      return new Promise(resolve => {
-        const optimizedRoutes = optimizeRoutes(appRoutes)
-        const accessedRoutes = filterRoutes(optimizedRoutes, permissions)
-        const accessedMenus = generateMenu(accessedRoutes)
-        commit('setAccessedRoutes', accessedRoutes)
-        commit('setAccessedMenus', accessedMenus)
-        resolve()
-      })
+      return new Promise((resolve) => {
+        const optimizedRoutes = optimizeRoutes(appRoutes);
+        const accessedRoutes = filterRoutes(optimizedRoutes, permissions);
+        const accessedMenus = generateMenu(accessedRoutes);
+        commit('setAccessedRoutes', accessedRoutes);
+        commit('setAccessedMenus', accessedMenus);
+        resolve(accessedRoutes);
+      });
     },
     getPermissions({ commit }) {
       return new Promise((resolve, reject) => {
         getUserPermission()
           .then(({ data = {} }) => {
-            const permissions = data.data || []
-            commit('setPermissions', permissions)
-            resolve(permissions)
+            const permissions = data.data || [];
+            commit('setPermissions', permissions);
+            resolve(permissions);
           })
-          .catch(err => {
-            reject(err)
-          })
-      })
+          .catch((err) => {
+            reject(err);
+          });
+      });
     },
   },
   getters: {
     loginStatus(state: State) {
-      return !!state.accessToken
+      return !!state.accessToken;
     },
     accessToken(state: State) {
-      return state.accessToken
+      return state.accessToken;
     },
     accessedRoutes(state: State) {
-      return state.accessedRoutes
+      return state.accessedRoutes;
     },
     accessedMenus(state: State) {
-      return state.accessedMenus
+      return state.accessedMenus;
     },
     userInfo(state: State) {
-      return state.userInfo
+      return state.userInfo;
     },
     permissions(state: State) {
-      return state.permissions
+      return state.permissions;
     },
   },
-}
+};
 
-export default application
+export default application;

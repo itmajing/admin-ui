@@ -7,10 +7,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent } from 'vue';
 
-@Component
-export default class BasicForm extends Vue {}
+export default defineComponent({});
 </script>
 
 <style lang="less" scoped></style>

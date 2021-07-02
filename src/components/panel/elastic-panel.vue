@@ -5,21 +5,29 @@
       class="au-elastic-panel-trigger"
       init-position="right"
       direction="vertical"
-      @onclick="handleModelTriggerClick"
+      @click="handleModelTriggerClick"
       title="拖拽调整位置，点击切换视图"
     >
       <slot name="toolkit">
-        <au-iconfont v-if="iTransformed" type="vertical" :style="{ fontSize: '20px' }"></au-iconfont>
+        <au-iconfont
+          v-if="iTransformed"
+          type="vertical"
+          :style="{ fontSize: '20px' }"
+        ></au-iconfont>
         <au-iconfont v-else type="horizontal" :style="{ fontSize: '20px' }"></au-iconfont>
       </slot>
     </au-toolkit>
     <div
       class="au-elastic-panel-wrapper"
-      :class="`au-elastic-panel-${iTransformed ? 'horizontal' : 'vertical'} au-elastic-panel-${placement}`"
+      :class="`au-elastic-panel-${
+        iTransformed ? 'horizontal' : 'vertical'
+      } au-elastic-panel-${placement}`"
     >
       <div
         class="au-elastic-panel-search"
-        :class="`au-elastic-panel-search-${placement} au-elastic-panel-search-${iCollapsed ? 'collapsed' : ''}`"
+        :class="`au-elastic-panel-search-${placement} au-elastic-panel-search-${
+          iCollapsed ? 'collapsed' : ''
+        }`"
       >
         <div class="search-content">
           <slot name="form">You should provide a slot named "form"</slot>
@@ -36,113 +44,101 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { computed, defineComponent, getCurrentInstance, onMounted, ref, toRef, watch } from 'vue';
 
-@Component({})
-export default class ElasticPanel extends Vue {
-  /**
-   * 组件内部数据
-   */
-  iTransformed = false
-  iCollapsed = false
-
-  /**
-   * 是否可转换
-   */
-  @Prop({
-    type: Boolean,
-    default: () => {
-      return true
+export default defineComponent({
+  props: {
+    transformative: {
+      type: Boolean,
+      default: () => {
+        return true;
+      },
     },
-  })
-  readonly transformative!: boolean
-
-  /**
-   * 是否可伸缩
-   */
-  @Prop({
-    type: Boolean,
-    default: () => {
-      return true
+    collapsible: {
+      type: Boolean,
+      default: () => {
+        return true;
+      },
     },
-  })
-  readonly collapsible!: boolean
-
-  /**
-   * 是否转换
-   */
-  @Prop({
-    type: Boolean,
-    default: () => {
-      return false
+    transformed: {
+      type: Boolean,
+      required: true,
+      default: () => {
+        return false;
+      },
     },
-  })
-  readonly transformed!: boolean
-
-  /**
-   * 是否收起
-   */
-  @Prop({
-    type: Boolean,
-    default: () => {
-      return false
+    collapsed: {
+      type: Boolean,
+      default: () => {
+        return false;
+      },
     },
-  })
-  readonly collapsed!: boolean
-
-  /**
-   * 位置
-   */
-  @Prop({
-    type: String,
-    validator(value: any): boolean {
-      return ['left', 'right'].indexOf(value) !== -1
+    placement: {
+      type: String,
+      validator(value: any): boolean {
+        return ['left', 'right'].indexOf(value) !== -1;
+      },
+      default: () => {
+        return 'left';
+      },
     },
-    default: () => {
-      return 'left'
-    },
-  })
-  readonly placement!: string
+  },
+  setup(props) {
+    const instance = getCurrentInstance();
 
-  @Watch('transformed')
-  onTransformedChange(value: boolean) {
-    this.iTransformed = value
-  }
+    const iTransformed = ref(false);
+    const iCollapsed = ref(false);
 
-  @Watch('collapsed')
-  onCollapsedChange(value: boolean) {
-    this.iCollapsed = value
-  }
+    const transformedProp = toRef<any, string>(props, 'transformed');
+    const collapsedProp = toRef<any, string>(props, 'collapsed');
+    const placementProp = toRef<any, string>(props, 'placement');
 
-  get collapsedIcon() {
-    if (this.iTransformed) {
-      if (this.placement === 'left') {
-        return this.iCollapsed ? 'double-right' : 'double-left'
+    const collapsedIcon = computed(() => {
+      if (iTransformed.value) {
+        if (placementProp.value === 'left') {
+          return iCollapsed.value ? 'double-right' : 'double-left';
+        } else {
+          return iCollapsed.value ? 'double-left' : 'double-right';
+        }
       } else {
-        return this.iCollapsed ? 'double-left' : 'double-right'
+        return iCollapsed.value ? 'double-bottom' : 'double-top';
       }
-    } else {
-      return this.iCollapsed ? 'double-bottom' : 'double-top'
-    }
-  }
+    });
 
-  handleModelTriggerClick() {
-    this.iTransformed = !this.iTransformed
-    this.$emit('update:transformed', this.iTransformed)
-    this.$emit('transform', this.iTransformed)
-  }
+    const handleModelTriggerClick = () => {
+      iTransformed.value = !iTransformed.value;
+      instance?.emit('update:transformed', iTransformed.value);
+      instance?.emit('transform', iTransformed.value);
+    };
 
-  handleCollapsedTriggerClick() {
-    this.iCollapsed = !this.iCollapsed
-    this.$emit('update:collapsed', this.iCollapsed)
-    this.$emit('collapse', this.iCollapsed)
-  }
+    const handleCollapsedTriggerClick = () => {
+      iCollapsed.value = !iCollapsed.value;
+      instance?.emit('update:collapsed', iCollapsed.value);
+      instance?.emit('collapse', iCollapsed.value);
+    };
 
-  mounted() {
-    this.iTransformed = this.transformed
-    this.iCollapsed = this.collapsed
-  }
-}
+    watch(transformedProp, (value: boolean) => {
+      iTransformed.value = value;
+    });
+
+    watch(collapsedProp, (value: boolean) => {
+      iCollapsed.value = value;
+    });
+
+    onMounted(() => {
+      iTransformed.value = transformedProp.value;
+      iCollapsed.value = collapsedProp.value;
+    });
+
+    return {
+      iTransformed,
+      iCollapsed,
+      collapsedIcon,
+      handleModelTriggerClick,
+      handleCollapsedTriggerClick,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>

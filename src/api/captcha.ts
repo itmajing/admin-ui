@@ -1,31 +1,31 @@
-import { AuApi } from '@/api/utils'
-import { AuAxios } from '@/libs/axios'
+import { AuApi } from '@/api/utils';
+import { AuAxios } from '@/libs/axios';
 
 const CAPTCHA_MAIL: AuApi = {
   url: 'api/captcha/mail',
   method: 'POST',
-}
+};
 
 const CAPTCHA_MOBILE: AuApi = {
   url: 'api/captcha/mobile',
   method: 'POST',
-}
+};
 
 export interface Options {
-  receiver: string
-  operation: string
+  receiver: string;
+  operation: string;
 }
 
-export function sendMailCaptcha(options: Options) {
+export function sendMailCaptcha(options: Options): Promise<any> {
   return AuAxios.request({
     ...CAPTCHA_MAIL,
     data: options,
-  })
+  });
 }
 
-export function sendMobileCaptcha(options: Options) {
+export function sendMobileCaptcha(options: Options): Promise<any> {
   return AuAxios.request({
     ...CAPTCHA_MOBILE,
     data: options,
-  })
+  });
 }

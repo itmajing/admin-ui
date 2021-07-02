@@ -1,7 +1,7 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
-import application from './modules/application'
-import permission from './modules/permission'
+import application from './modules/application';
+import permission from './modules/permission';
 
 export default createStore({
   state: {},
@@ -11,4 +11,4 @@ export default createStore({
     application,
     permission,
   },
-})
+});

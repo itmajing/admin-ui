@@ -1,50 +1,50 @@
-import { LoggerObject, LoggerOption } from './types/logger'
+import { LoggerObject, LoggerOption } from './types/logger';
 
 const LOG_LEVEL = {
   debug: 0,
   info: 5,
   warn: 10,
   error: 15,
-}
+};
 
 class AuLogger implements LoggerObject {
-  level = 'info'
-  value = LOG_LEVEL.info
+  level = 'info';
+  value = LOG_LEVEL.info;
 
   constructor(options: LoggerOption = { level: 'info' }) {
     if (options.level) {
-      this.level = options.level
-      this.value = LOG_LEVEL[options.level] || LOG_LEVEL.info
+      this.level = options.level;
+      this.value = LOG_LEVEL[options.level] || LOG_LEVEL.info;
     }
   }
 
   /* eslint-disable no-console */
-  debug(message?: any, ...optionalParams: any[]): void {
+  debug(...data: any[]): void {
     if (this.value === LOG_LEVEL.debug) {
-      console.info(message, ...optionalParams)
+      console.info(...data);
     }
   }
 
-  info(message?: any, ...optionalParams: any[]): void {
+  info(...data: any[]): void {
     if (this.value <= LOG_LEVEL.info) {
-      console.info(message, ...optionalParams)
+      console.info(...data);
     }
   }
 
-  warn(message?: any, ...optionalParams: any[]): void {
+  warn(...data: any[]): void {
     if (this.value <= LOG_LEVEL.warn) {
-      console.warn(message, ...optionalParams)
+      console.warn(...data);
     }
   }
 
-  error(message?: any, ...optionalParams: any[]): void {
+  error(...data: any[]): void {
     if (this.value <= LOG_LEVEL.error) {
-      console.error(message, ...optionalParams)
+      console.error(...data);
     }
   }
   /* eslint-enable no-console */
 }
 
-export { AuLogger }
+export { AuLogger };
 
-export default new AuLogger()
+export default new AuLogger();

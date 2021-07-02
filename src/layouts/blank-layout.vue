@@ -4,11 +4,8 @@
   </div>
 </template>
 
-<script>
-import { Component, Vue } from 'vue-property-decorator'
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-@Component({
-  name: 'BlankLayout',
-})
-export default class BlankLayout extends Vue {}
+export default defineComponent({});
 </script>

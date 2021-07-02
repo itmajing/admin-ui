@@ -11,20 +11,20 @@
         </a-card>
       </div>
       <div class="au-user-layout-footer">
-        <span>Copyright © 2020 <a href="https://github.com/itmajing/admin-ui" target="_blank">Admin UI</a></span>
+        <span
+          >Copyright © 2020
+          <a href="https://github.com/itmajing/admin-ui" target="_blank">Admin UI</a></span
+        >
       </div>
     </div>
     <vue-particles class="au-user-layout-background"></vue-particles>
   </div>
 </template>
 
-<script>
-import { Component, Vue } from 'vue-property-decorator'
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-@Component({
-  name: 'UserLayout',
-})
-export default class UserLayout extends Vue {}
+export default defineComponent({});
 </script>
 
 <style scoped lang="less">

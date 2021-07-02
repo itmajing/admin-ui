@@ -1,5 +1,5 @@
-import { RouteRecordRaw } from 'vue-router'
-import { MainLayout, UserLayout } from '@/layouts'
+import { RouteRecordRaw } from 'vue-router';
+import { MainLayout, UserLayout } from '@/layouts';
 
 const userRoutes: RouteRecordRaw[] = [
   {
@@ -19,7 +19,7 @@ const userRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-]
+];
 
 /**
  * meta 可选参数:
@@ -42,7 +42,7 @@ const homeRoute: RouteRecordRaw = {
     closable: false,
   },
   component: () => import(/* webpackChunkName: "home" */ '@/views/home/home.vue'),
-}
+};
 
 const appRoutes: RouteRecordRaw[] = [
   {
@@ -69,7 +69,8 @@ const appRoutes: RouteRecordRaw[] = [
         meta: {
           title: '个人中心',
         },
-        component: () => import(/* webpackChunkName: "account" */ '@/views/account/center/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "account" */ '@/views/account/center/index.vue'),
       },
       {
         name: 'account-setting',
@@ -77,7 +78,8 @@ const appRoutes: RouteRecordRaw[] = [
         meta: {
           title: '个人设置',
         },
-        component: () => import(/* webpackChunkName: "account" */ '@/views/account/setting/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "account" */ '@/views/account/setting/index.vue'),
       },
     ],
   },
@@ -96,7 +98,8 @@ const appRoutes: RouteRecordRaw[] = [
         meta: {
           title: '分析页',
         },
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/analysis.vue'),
+        component: () =>
+          import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/analysis.vue'),
       },
       {
         path: 'monitor',
@@ -104,7 +107,8 @@ const appRoutes: RouteRecordRaw[] = [
         meta: {
           title: '监控页',
         },
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/monitor.vue'),
+        component: () =>
+          import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/monitor.vue'),
       },
       {
         path: 'workplace',
@@ -112,7 +116,8 @@ const appRoutes: RouteRecordRaw[] = [
         meta: {
           title: '工作台',
         },
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/workplace.vue'),
+        component: () =>
+          import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/workplace.vue'),
       },
     ],
   },
@@ -183,7 +188,7 @@ const appRoutes: RouteRecordRaw[] = [
     name: 'iframe',
     meta: {
       title: '内嵌页面',
-      icon: 'table',
+      icon: 'iframe',
     },
     component: MainLayout,
     children: [
@@ -214,13 +219,13 @@ const appRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '*',
+    path: '/:catchAll(.*)*',
     name: 'notfound',
     meta: {
       hidden: true,
     },
     component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/notfound.vue'),
   },
-]
+];
 
-export { userRoutes, appRoutes, homeRoute }
+export { userRoutes, appRoutes, homeRoute };

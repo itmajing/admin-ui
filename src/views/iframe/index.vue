@@ -11,32 +11,34 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
+import { computed, defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
 
-@Component
-export default class Iframe extends Vue {
-  iframeLoading = true
-
-  @Prop({
-    type: String,
-    default: () => {
-      return ''
+export default defineComponent({
+  props: {
+    iframe: {
+      type: String,
+      default: () => {
+        return '';
+      },
     },
-  })
-  readonly iframe!: string
+  },
+  setup() {
+    const store = useStore();
 
-  @Getter('containerHeight') containerHeight!: number
+    const iframeLoading = ref(true);
+    const containerHeight = computed(() => store.getters.containerHeight);
+    const handleIframeOnload = () => {
+      iframeLoading.value = false;
+    };
 
-  @Watch('iframe')
-  onIframeChange() {
-    this.iframeLoading = true
-  }
-
-  handleIframeOnload() {
-    this.iframeLoading = false
-  }
-}
+    return {
+      iframeLoading,
+      containerHeight,
+      handleIframeOnload,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>

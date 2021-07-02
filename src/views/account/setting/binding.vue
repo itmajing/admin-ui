@@ -23,46 +23,51 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { defineComponent, reactive } from 'vue';
+import { message } from 'ant-design-vue';
 
-@Component
-export default class Binding extends Vue {
-  listData = [
-    {
-      icon: 'qq',
-      title: 'QQ',
-      value: '179****255',
-      actions: {
-        title: '修改',
-        callback: () => {
-          this.$message.info('This is a normal message')
+export default defineComponent({
+  setup() {
+    const listData = reactive([
+      {
+        icon: 'qq',
+        title: 'QQ',
+        value: '179****255',
+        actions: {
+          title: '修改',
+          callback: () => {
+            message.info('This is a normal message');
+          },
         },
       },
-    },
-    {
-      icon: 'wechat',
-      title: '微信',
-      value: '',
-      actions: {
-        title: '绑定',
-        callback: () => {
-          this.$message.warn('This is a warn message')
+      {
+        icon: 'wechat',
+        title: '微信',
+        value: '',
+        actions: {
+          title: '绑定',
+          callback: () => {
+            message.warn('This is a warn message');
+          },
         },
       },
-    },
-    {
-      icon: 'github',
-      title: 'Github',
-      value: '',
-      actions: {
-        title: '绑定',
-        callback: () => {
-          this.$message.warn('This is a warn message')
+      {
+        icon: 'github',
+        title: 'Github',
+        value: '',
+        actions: {
+          title: '绑定',
+          callback: () => {
+            message.warn('This is a warn message');
+          },
         },
       },
-    },
-  ]
-}
+    ]);
+    return {
+      listData,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped></style>

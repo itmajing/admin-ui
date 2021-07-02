@@ -1,20 +1,29 @@
-import { RouteConfig } from 'vue-router'
-import { AuLogger } from '@/libs/logger'
+import { Router, RouteRecordRaw } from 'vue-router';
+import { AuLogger } from '@/libs/logger';
 
 export interface Menu {
-  parent?: Menu
-  name: string
-  path: string
-  icon?: string
-  title: string
-  children: Menu[]
+  parent?: Menu;
+  name: string;
+  path: string;
+  icon?: string;
+  title: string;
+  children: Menu[];
 }
 
-export function optimizeRoutes(routes: RouteConfig[], parent?: RouteConfig): RouteConfig[] {
-  return routes.map(route => {
-    const { path, name, children } = route
-    if (!name) {
-      throw new Error(`The route name must not be null, path: ${path}`)
+export function addRoutes(router: Router, routes: RouteRecordRaw[] = []): void {
+  for (const route of routes) {
+    router.addRoute(route);
+  }
+}
+
+export function optimizeRoutes(
+  routes: RouteRecordRaw[],
+  parent?: RouteRecordRaw,
+): RouteRecordRaw[] {
+  return routes.map((route) => {
+    const { path, name, children } = route;
+    if (!String(name)) {
+      throw new Error(`The route name must not be null, path: ${path}`);
     }
 
     const currentRoute = {
@@ -23,114 +32,114 @@ export function optimizeRoutes(routes: RouteConfig[], parent?: RouteConfig): Rou
         ? path.startsWith('/')
           ? path
           : `${(parent && parent.path) || ''}/${path}`
-        : `${(parent && parent.path) || ''}/${name}`,
-    }
+        : `${(parent && parent.path) || ''}/${String(name)}`,
+    };
 
     if (children && children.length > 0) {
-      currentRoute.children = optimizeRoutes(children, currentRoute)
+      currentRoute.children = optimizeRoutes(children, currentRoute);
     }
 
-    return currentRoute
-  })
+    return currentRoute;
+  });
 }
 
-export function findRouteByName(routes: RouteConfig[], name: string): RouteConfig {
-  let result!: RouteConfig
+export function findRouteByName(routes: RouteRecordRaw[], name: string): RouteRecordRaw {
+  let result!: RouteRecordRaw;
   for (const router of routes) {
     if (name === router.name) {
-      result = router
+      result = router;
     } else {
       if (router.children && router.children.length > 0) {
-        result = findRouteByName(router.children, name)
+        result = findRouteByName(router.children, name);
       }
     }
     if (result) {
-      break
+      break;
     }
   }
-  return result
+  return result;
 }
 
-export function generateMenu(routes: RouteConfig[], parent?: Menu): Menu[] {
-  const menus: Menu[] = []
+export function generateMenu(routes: RouteRecordRaw[], parent?: Menu): Menu[] {
+  const menus: Menu[] = [];
   for (const route of routes) {
-    const { title, icon, hidden } = route.meta || {}
+    const { title, icon, hidden } = route.meta || {};
     if (hidden) {
-      AuLogger.debug('Ignore the route with hidden property, {}', route)
-      continue
+      AuLogger.debug('Ignore the route with hidden property, {}', route);
+      continue;
     }
 
-    const { name, path, children } = route
+    const { name, path, children } = route;
     if (!name) {
-      AuLogger.warn('Ignore the route with empty name, {}', route)
-      continue
+      AuLogger.warn('Ignore the route with empty name, {}', route);
+      continue;
     }
 
     const menu: Menu = {
       parent: parent || undefined,
-      name: name,
+      name: String(name),
       path: path
         ? path.startsWith('/')
           ? path
           : `${(parent && parent.path) || ''}/${path}`
-        : `${(parent && parent.path) || ''}/${name}`,
-      title: title || name,
-      icon: icon || undefined,
+        : `${(parent && parent.path) || ''}/${String(name)}`,
+      title: String(title) || String(name),
+      icon: String(icon) || undefined,
       children: [],
-    }
+    };
 
     if (children && children.length > 0) {
-      const submenu = generateMenu(children, menu)
+      const submenu = generateMenu(children, menu);
       if (submenu.length > 0) {
-        menu.children = submenu || []
+        menu.children = submenu || [];
       }
     }
 
-    menus.push(menu)
+    menus.push(menu);
   }
 
-  return menus
+  return menus;
 }
 
 export function findMenuByName(menus: Menu[], name: string): Menu {
-  let result!: Menu
+  let result!: Menu;
   for (const menu of menus) {
     if (menu.name === name) {
-      result = menu
-      break
+      result = menu;
+      break;
     }
 
     if (menu.children.length > 0) {
-      result = findMenuByName(menu.children, name)
+      result = findMenuByName(menu.children, name);
       if (result) {
-        break
+        break;
       }
     }
   }
 
-  return result
+  return result;
 }
 
 export function findTopMenuByName(menus: Menu[], name: string): Menu {
-  let result!: Menu
-  let menu = findMenuByName(menus, name)
+  let result!: Menu;
+  let menu = findMenuByName(menus, name);
   if (menu) {
     while (menu.parent) {
-      menu = menu.parent
+      menu = menu.parent;
     }
-    result = menu
+    result = menu;
   }
-  return result
+  return result;
 }
 
 export function findParentMenuByName(menus: Menu[], name: string): Menu[] {
-  const results = []
-  let menu = findMenuByName(menus, name)
+  const results = [];
+  let menu = findMenuByName(menus, name);
   if (menu) {
     while (menu.parent) {
-      menu = menu.parent
-      results.push(menu)
+      menu = menu.parent;
+      results.push(menu);
     }
   }
-  return results
+  return results;
 }
