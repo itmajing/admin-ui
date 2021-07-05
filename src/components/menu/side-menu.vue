@@ -132,7 +132,6 @@ export default defineComponent({
     };
 
     const handleMenuSelect = (payload: any) => {
-      console.log('=========select', instance);
       instance?.emit('select', payload);
     };
 

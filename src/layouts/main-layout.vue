@@ -321,7 +321,6 @@ export default defineComponent({
       handleTabEdit,
       handleTabMenuClick,
     } = useInitMultiTabs();
-    console.log('=======accessed menus=====', accessedMenus);
 
     const store = useStore();
     const logger = useLogger();
