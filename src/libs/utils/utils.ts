@@ -1,6 +1,12 @@
 import { UtilsObject } from './types/utils';
 
 class AuUtils implements UtilsObject {
+  base: number;
+
+  constructor() {
+    this.base = new Date().getTime();
+  }
+
   /**
    * 保存SessionStorageItem
    * @param key 键
@@ -55,6 +61,12 @@ class AuUtils implements UtilsObject {
 
   removeLocalStorageItem(key: string) {
     localStorage.removeItem(key);
+  }
+
+  generateUniqueId(): string {
+    const uid = this.base.toString(32);
+    this.base++;
+    return uid;
   }
 }
 

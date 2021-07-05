@@ -12,6 +12,8 @@ interface UtilsObject {
   getLocalStorageItem(key: string, data?: any): any;
 
   removeLocalStorageItem(key: string): void;
+
+  generateUniqueId(): string;
 }
 
 declare module 'vue/types/vue' {
